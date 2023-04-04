@@ -53,10 +53,9 @@ class BaseSpec extends GebReportingSpec {
             log.info("Test Job Link: " + sauceUrl)
             log.info("[[ATTACHMENT|${sauceUrl}]]")
             Allure.addAttachment("SauceLabs Job Video", "text/html", sauceUrl)
-            ((JavascriptExecutor) driver).executeScript("job-name=${this.class.name}")
-            ((JavascriptExecutor) driver).executeScript("job-tags=tag1,tag2,tag3")
-            ((JavascriptExecutor) driver).executeScript("job-build=" + System
-                .getProperty("JENKINS_BUILD_NUMBER", "1"))
+            ((JavascriptExecutor) driver).executeScript("sauce:job-name=${this.class.name}")
+            ((JavascriptExecutor) driver).executeScript("sauce:job-tags=tag1,tag2,tag3")
+            ((JavascriptExecutor) driver).executeScript("sauce:job-build=" + System.getProperty("JENKINS_BUILD_NUMBER", "1"))
         }
     }
     
