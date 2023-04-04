@@ -9,7 +9,9 @@ def parallelStagesMap = jobs.collectEntries {
 def generateStage(job) {
     return {
         stage("stage: ${job}") {
-            echo "This is ${job}. is the param also here? -DCARE_TEST_ENVIRONMENT=${params.CARE_TEST_ENVIRONMENT}"
+            sauce("qacare") {
+                sh "./gradlew clean ${job}Test -DCARE_TEST_ENVIRONMENT=${params.CARE_TEST_ENVIRONMENT}"
+            }
         }
     }
 }
