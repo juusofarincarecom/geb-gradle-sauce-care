@@ -1,14 +1,15 @@
 #!/usr/bin/env groovy
-def parallelStagesMap
 
-def generateStage(driver) {
+def jobs = ['firefoxMac', 'ieWin10', 'chromeWin11', 'safariIphone', 'chromeAndroid']
+
+def parallelStagesMap = jobs.collectEntries {
+    ["${it}" : generateStage(it)]
+}
+
+def generateStage(job) {
     return {
-        stage("stage: ${driver}") {
-            steps {
-                sauce("qacare") {
-                    sh "./gradlew clean ${driver}Test -DCARE_TEST_ENVIRONMENT=${params.CARE_TEST_ENVIRONMENT}"
-                }
-            }
+        stage("stage: ${job}") {
+            echo "This is ${job}. is the param also here? -DCARE_TEST_ENVIRONMENT=${params.CARE_TEST_ENVIRONMENT}"
         }
     }
 }
@@ -31,14 +32,9 @@ pipeline {
                                   artifactNumToKeepStr: '5'))
     }
     stages {
-        stage('Create List of Drivers to run in Parallel') {
+        stage('non-parallel stage') {
             steps {
-                script {
-                    def drivers = ['firefoxMac', 'ieWin10', 'chromeWin11', 'safariIphone', 'chromeAndroid']
-                    parallelStagesMap = drivers.collectEntries {
-                        ["${it}": generateStage(it)]
-                    }
-                }
+                echo 'This stage will be executed first.'
             }
         }
         stage('Run Stages in Parallel') {
@@ -49,40 +45,4 @@ pipeline {
             }
         }
     }
-    post {
-        always('Post-build actions') {
-            script {
-                summary = junit allowEmptyResults: true,
-                                testDataPublishers: [[$class: 'SauceOnDemandReportPublisher', jobVisibility: 'public']],
-                                testResults: 'build/test-results/*/*.xml'
-                saucePublisher testDataPublishers: [[$class: 'SauceOnDemandReportPublisher', jobVisibility: 'public']]
-                def totalTest = summary.totalCount - summary.skipCount
-                def testStatus = "\nTotal: ${totalTest}, Passed: ${summary.passCount}, Failures: ${summary.failCount}, Skipped/Retried: ${summary.skipCount}"
-                slackSend color: slackMessageColor(),
-                          botUser: true,
-                          channel: 'hit_usc',
-                          message: "SEO Visitor Test Result : ${params.CARE_TEST_ENVIRONMENT} #${currentBuild.result} <${BUILD_URL}allure|report>, <${BUILD_URL}|job>" +
-                                   testStatus,
-                          tokenCredentialId: 'slack-api-bot-user-oauth-token'
-                deleteDir()
-            }
-        }
-        success {
-            echo 'I succeeded!'
-        }
-        unstable {
-            echo 'I am unstable :/'
-        }
-        failure {
-            echo 'I failed :('
-        }
-        changed {
-            echo 'Things were different before...'
-        }
-    }
-}
-
-String slackMessageColor() {
-    return currentBuild.result == 'SUCCESS' ? '#00ff26' :
-           currentBuild.result == 'UNSTABLE' ? '#f6ff00' : currentBuild.result == 'FAILURE' ? '#ff0000' : '#0044ff'
 }
