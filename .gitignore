@@ -7,3 +7,5 @@ build
 *.iws
 out
 .idea
+.allure
+allure-results

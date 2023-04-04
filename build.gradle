@@ -1,43 +1,86 @@
+//file:noinspection GroovyAssignabilityCheck
+
 plugins {
+    id "java"
     id "idea"
     id "groovy"
     id "com.github.erdi.webdriver-binaries" version "2.7"
     id "com.github.erdi.idea-base" version "2.2"
+    id "org.gebish.saucelabs" version "7.0"
+    id 'io.qameta.allure' version '2.8.1'
 }
 
-ext {
-    // The drivers we want to use
-    drivers = ["firefox", "chrome", "chromeHeadless"]
+group = thegroup
+version = theversion
+description = "Geb SauceLabs for Care.com QA"
 
+compileJava.sourceCompatibility = thesourceCompatibility
+compileJava.targetCompatibility = thesourceCompatibility
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+
+ext {
+    // The local drivers we want to use
+    drivers = ["firefox",
+               "chrome",
+               "chromeHeadless"
+    ]
     gebVersion = '7.0'
-    seleniumVersion = '4.2.2'
-    chromeDriverVersion = '79.0.3945.36'
-    geckoDriverVersion = '0.31.0'
+    seleniumVersion = '4.8.3'
+    allureVersion = '2.21.0'
+    junit5Version = '5.9.2'
 }
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
+    
     // If using Spock, need to depend on geb-spock
-    testImplementation "org.gebish:geb-spock:$gebVersion"
+    implementation "org.gebish:geb-spock:$gebVersion"
 
     // If using JUnit 5, need to depend on geb-junit5
-    testImplementation "org.gebish:geb-junit5:$gebVersion"
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    implementation "org.gebish:geb-junit5:$gebVersion"
+    
+    //Allure
+    implementation 'io.qameta.allure:allure-junit5:2.21.0'
+    implementation "io.qameta.allure:allure-java-commons:$allureVersion"
+    //implementation "io.qameta.allure-allure-spock:$allureVersion"
+    
+    //JUnit5
+    implementation "org.junit.jupiter:junit-jupiter-api:$junit5Version"
+    implementation "org.junit.jupiter:junit-jupiter-engine:$junit5Version"
+    implementation "org.junit.jupiter:junit-jupiter-params:$junit5Version"
 
     // Drivers
-    testImplementation "org.seleniumhq.selenium:selenium-chrome-driver:$seleniumVersion"
-    testImplementation "org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion"
+    implementation "org.seleniumhq.selenium:selenium-chrome-driver:$seleniumVersion"
+    implementation "org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion"
+    
+    //appium
+    implementation group: 'io.appium', name: 'java-client', version: '8.3.0'
+    
+    //Screenshot functionality
+    implementation group: 'ru.yandex.qatools.ashot', name: 'ashot', version: '1.5.4'
+    
+    // Sauce
+    sauceConnect 'com.saucelabs:ci-sauce:1.167'
+    implementation 'com.saucelabs:saucebindings-junit5:1.0.0'
+    
+    //Logging
+    implementation 'org.slf4j:slf4j-api:2.0.7'
+    implementation 'org.slf4j:slf4j-simple:2.0.7'
+
 }
 
 webdriverBinaries {
     chromedriver {
-        version = chromeDriverVersion
-        fallbackTo32Bit = true
+        versionRegexp = '.*'
     }
-    geckodriver geckoDriverVersion
+    geckodriver {
+        versionRegexp = '.*'
+    }
 }
 
 drivers.each { driver ->
@@ -47,7 +90,6 @@ drivers.each { driver ->
         outputs.upToDateWhen { false }  // Always run tests
 
         useJUnitPlatform()
-
         systemProperty "geb.build.reportsDir", reporting.file("geb/$name")
         systemProperty "geb.env", driver
     }
@@ -55,17 +97,89 @@ drivers.each { driver ->
 
 test {
     dependsOn drivers.collect { tasks["${it}Test"] }
-    enabled = false
+    enabled = true
+    systemProperty("junit.jupiter.execution.parallel.enabled", "true")
+    systemProperty("junit.jupiter.execution.parallel.config.strategy", "dynamic")
+    systemProperty("junit.jupiter.extensions.autodetection.enabled", "true")
 }
 
 tasks.withType(Test) {
     maxHeapSize = "1g"
     jvmArgs '-XX:MaxMetaspaceSize=128m'
     testLogging {
-        exceptionFormat = 'full'
+        testLogging.showStackTraces = true
+        testLogging.showStandardStreams = true
+        testLogging.events "standardOut", "started", "passed", "skipped", "failed"
+        testLogging.exceptionFormat "short"
     }
+    maxParallelForks = System.getProperty("forks", "8")
+    forkEvery = 1
 }
 
 tasks.withType(GroovyCompile) {
     groovyOptions.forkOptions.memoryMaximumSize = '256m'
 }
+
+sauceLabs {
+    useTunnel = false
+    browsers {
+        // https://saucelabs.com/products/platform-configurator
+        // Plugin sets the capabilities to System Property geb.saucelabs.browser
+        firefox_mac {
+            capabilities browserName: "Firefox",
+                         platformName: "macOS 11.00",
+                         browserVersion: "latest"
+        }
+        ie_win10 {
+            capabilities browserName: "Internet Explorer",
+                         platformName: "Windows 10",
+                         browserVersion: "latest"
+        }
+        chrome_win11 {
+            capabilities browserName: "Chrome",
+                         platformName: "Windows 11",
+                         browserVersion: "latest"
+        }
+        safari_iphone {
+            capabilities browserName: "Safari",
+                         platformName: "iOS",
+                         "appium:deviceName": "iPhone Simulator",
+                         "appium:platformVersion": "16.2"
+        }
+        chrome_android {
+            capabilities browserName: "Chrome",
+                         platformName: "Android",
+                         "appium:deviceName": "Android GoogleAPI Emulator",
+                         "appium:platformVersion": "12.0"
+        }
+    }
+    account {
+        username = System.getenv(USER_ENV_VAR)
+        accessKey = System.getenv(ACCESS_KEY_ENV_VAR)
+    }
+    task {
+        group JavaBasePlugin.VERIFICATION_GROUP
+    
+        outputs.upToDateWhen { false }  // Always run tests
+    
+        useJUnitPlatform()
+        systemProperty "geb.build.reportsDir", reporting.file("geb/$name")
+        systemProperty "geb.env", it.name.replace("Test", "")
+    }
+}
+
+allure {
+    autoconfigure = false
+    aspectjweaver = true
+    version = allureVersion
+    resultsDir = file("allure-results")
+    reportDir = file("allure-report")
+}
+
+task aggregateBuildInfo(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    systemProperties(System.properties)
+    mainClass = "reporting.BuildInfoAggregator"
+}
+
+[test].forEach {it.finalizedBy(aggregateBuildInfo) }
