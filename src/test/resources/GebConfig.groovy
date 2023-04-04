@@ -15,8 +15,7 @@ import org.apache.commons.io.FilenameUtils
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.firefox.FirefoxDriver
-import pages.error.PageNotFoundPage
-import pages.error.UpstreamRequestTimeoutPage
+import pages.error.*
 
 import java.nio.file.Files
 
@@ -26,7 +25,7 @@ atCheckWaiting = false
 autoClearCookies = false
 baseNavigatorWaiting = true
 reportOnTestFailureOnly = true
-unexpectedPages = [UpstreamRequestTimeoutPage, PageNotFoundPage]
+unexpectedPages = [UpstreamRequestTimeoutPage, PageNotFoundPage, AkamaiReferencePage, AuthReqPage, NotAllowedErrorPage]
 requirePageAtCheckers = true
 
 
