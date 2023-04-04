@@ -29,38 +29,19 @@ pipeline {
                           userRemoteConfigs: scm.userRemoteConfigs])
             }
         }
-        stage('firefox_mac') {
-            steps {
-                sauce('qacare') {
-                    sh "./gradlew clean firefox_macTest -DCARE_TEST_ENVIRONMENT=${params.CARE_TEST_ENVIRONMENT}"
-                }
-            }
-        }
-        stage('ie_win10') {
-            steps {
-                sauce('qacare') {
-                    sh "./gradlew clean ie_win10Test -DCARE_TEST_ENVIRONMENT=${params.CARE_TEST_ENVIRONMENT}"
-                }
-            }
-        }
-        stage('chrome_win11') {
-            steps {
-                sauce('qacare') {
-                    sh "./gradlew clean chrome_win11Test -DCARE_TEST_ENVIRONMENT=${params.CARE_TEST_ENVIRONMENT}"
-                }
-            }
-        }
-        stage('safari_iphone') {
-            steps {
-                sauce('qacare') {
-                    sh "./gradlew clean safari_iphoneTest -DCARE_TEST_ENVIRONMENT=${params.CARE_TEST_ENVIRONMENT}"
-                }
-            }
-        }
-        stage('chrome_android') {
-            steps {
-                sauce('qacare') {
-                    sh "./gradlew clean chrome_androidTest -DCARE_TEST_ENVIRONMENT=${params.CARE_TEST_ENVIRONMENT}"
+        def drivers = [    ['Firefox Mac', 'firefoxMacTest'],
+                          ['Internet Explorer Win10', 'ieWin10Test'],
+                          ['Chrome Win11', 'chromeWin11Test'],
+                          ['Safari iPhone', 'safariIphoneTest'],
+                          ['Chrome Android', 'chromeAndroidTest']
+        ]
+    
+        drivers.each { driver ->
+            stage(driver[0]) {
+                steps {
+                    sauce('qacare') {
+                        sh "./gradlew clean ${driver[1]} -DCARE_TEST_ENVIRONMENT=${params.CARE_TEST_ENVIRONMENT}"
+                    }
                 }
             }
         }
