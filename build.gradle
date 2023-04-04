@@ -154,8 +154,10 @@ sauceLabs {
         }
     }
     account {
-        username = System.getenv(USER_ENV_VAR)
-        accessKey = System.getenv(ACCESS_KEY_ENV_VAR)
+        def sauceUserEnvVar = "SAUCE_USER_NAME"
+        def sauceKeyEnvVar = "SAUCE_API_KEY"
+        username = System.getenv(sauceUserEnvVar)
+        accessKey = System.getenv(sauceKeyEnvVar)
     }
     task {
         group JavaBasePlugin.VERIFICATION_GROUP
