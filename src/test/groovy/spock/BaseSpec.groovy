@@ -29,8 +29,10 @@ class BaseSpec extends GebReportingSpec {
     private String sessionId
     private String sauceUrl
     private Capabilities capabilities
-    public static String USER_ENV_VAR = System.getenv("GEB_SAUCE_LABS_USER")
-    private static String ACCESS_KEY_ENV_VAR = System.getenv("GEB_SAUCE_LABS_ACCESS_PASSWORD")
+    private static String sauceUserEnvVar = "SAUCE_USER_NAME"
+    private static String sauceKeyEnvVar = "SAUCE_API_KEY"
+    private static String USER_ENV_VAR = System.getenv(sauceUserEnvVar)
+    private static String ACCESS_KEY_ENV_VAR = System.getenv(sauceKeyEnvVar)
     private static final String KEY = String.format("%s:%s", USER_ENV_VAR, ACCESS_KEY_ENV_VAR)
     private static final String SAUCE_TESTS_URL = "https://app.saucelabs.com/tests"
     
