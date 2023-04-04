@@ -172,7 +172,7 @@ sauceLabs {
 
 allure {
     autoconfigure = false
-    aspectjweaver = true
+    aspectjweaver = false
     version = allureVersion
     resultsDir = file("allure-results")
     reportDir = file("allure-report")
