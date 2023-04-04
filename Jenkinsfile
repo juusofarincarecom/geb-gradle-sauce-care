@@ -1,4 +1,18 @@
 #!/usr/bin/env groovy
+def parallelStagesMap
+
+def generateStage(driver) {
+    return {
+        stage("stage: ${driver}") {
+            steps {
+                sauce("qacare") {
+                    sh "./gradlew clean ${driver}Test -DCARE_TEST_ENVIRONMENT=${params.CARE_TEST_ENVIRONMENT}"
+                }
+            }
+        }
+    }
+}
+
 pipeline {
     agent {
         label 'build'
@@ -29,13 +43,20 @@ pipeline {
                           userRemoteConfigs: scm.userRemoteConfigs])
             }
         }
-        def drivers = ['firefoxMac', 'ieWin10', 'chromeWin11' , 'safariIphone', 'chromeAndroid']
-        drivers.each { driver ->
-            stage(driver) {
-                steps {
-                    sauce('qacare') {
-                        sh "./gradlew clean ${driver}Test -DCARE_TEST_ENVIRONMENT=${params.CARE_TEST_ENVIRONMENT}"
+        stage('Create List of Drivers to run in Parallel') {
+            steps {
+                script {
+                    def drivers = ['firefoxMac', 'ieWin10', 'chromeWin11' , 'safariIphone', 'chromeAndroid']
+                    parallelStagesMap = drivers.collectEntries {
+                        ["${it}" : generateStage(it)]
                     }
+                }
+            }
+        }
+        stage('Run Stages in Parallel') {
+            steps {
+                script {
+                    parallel parallelStagesMap
                 }
             }
         }
@@ -81,18 +102,8 @@ pipeline {
 }
 
 String slackMessageColor() {
-    switch(currentBuild.result) {
-        case 'SUCCESS':
-            return '#00ff26' //Green
-            break
-        case 'UNSTABLE':
-            return '#f6ff00' //Yellow
-            break
-        case 'FAILURE':
-            return '#ff0000' //Red
-            break
-        default:
-            return '#0044ff' //Blue
-            break
-    }
+    return currentBuild.result == 'SUCCESS' ? '#00ff26' :
+           currentBuild.result == 'UNSTABLE' ? '#f6ff00' :
+           currentBuild.result == 'FAILURE' ? '#ff0000' :
+           '#0044ff'
 }
