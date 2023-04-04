@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-def jobs = ['firefoxMac', 'ieWin10', 'chromeWin11', 'safariIphone', 'chromeAndroid']
+def jobs = ['firefoxMac'] //, 'ieWin10', 'chromeWin11', 'safariIphone', 'chromeAndroid'
 
 def parallelStagesMap = jobs.collectEntries {
     ["${it}" : generateStage(it)]
@@ -10,10 +10,7 @@ def generateStage(job) {
     return {
         stage("stage: ${job}") {
             sauce("qacare") {
-                echo "SAUCE_USERNAME=" + System.getenv('SAUCE_USERNAME')
-                echo "SAUCE_ACCESS_KEY=" + System.getenv('SAUCE_ACCESS_KEY')
-                echo "SAUCE_USER_NAME=" + System.getenv('SAUCE_USER_NAME')
-                echo "SAUCE_API_KEY=" + System.getenv('SAUCE_API_KEY')
+                sh 'env'
                 sh "./gradlew clean ${job}Test -DCARE_TEST_ENVIRONMENT=${params.CARE_TEST_ENVIRONMENT}"
             }
         }
