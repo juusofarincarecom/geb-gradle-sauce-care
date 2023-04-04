@@ -29,8 +29,8 @@ class BaseSpec extends GebReportingSpec {
     private String sessionId
     private String sauceUrl
     private Capabilities capabilities
-    private static String sauceUserEnvVar = "SAUCE_USER_NAME"
-    private static String sauceKeyEnvVar = "SAUCE_API_KEY"
+    private static String sauceUserEnvVar = "SAUCE_USERNAME"
+    private static String sauceKeyEnvVar = "SAUCE_ACCESS_KEY"
     private static String USER_ENV_VAR = System.getenv(sauceUserEnvVar)
     private static String ACCESS_KEY_ENV_VAR = System.getenv(sauceKeyEnvVar)
     private static final String KEY = String.format("%s:%s", USER_ENV_VAR, ACCESS_KEY_ENV_VAR)
@@ -51,13 +51,15 @@ class BaseSpec extends GebReportingSpec {
         if(isSauceLabs) {
             this.sessionId = (((RemoteWebDriver) driver).getSessionId()).toString()
             this.sauceUrl = getSauceLink(sessionId)
-            log.info("SauceOnDemandSessionID=${sessionId} job-name=${this.class.name}")
+            String testName = this.class.name
+            log.info("SauceOnDemandSessionID=${sessionId} job-name=${testName}")
             log.info("Test Job Link: " + sauceUrl)
             log.info("[[ATTACHMENT|${sauceUrl}]]")
             Allure.addAttachment("SauceLabs Job Video", "text/html", sauceUrl)
-            ((JavascriptExecutor) driver).executeScript("sauce:job-name=${this.class.name}")
-            ((JavascriptExecutor) driver).executeScript("sauce:job-tags=tag1,tag2,tag3")
-            ((JavascriptExecutor) driver).executeScript("sauce:job-build=" + System.getProperty("JENKINS_BUILD_NUMBER", "1"))
+            String sauceTag = "sauce:job-"
+            ((JavascriptExecutor) driver).executeScript("${sauceTag}name=${testName}")
+            ((JavascriptExecutor) driver).executeScript("${sauceTag}tags=" +  System.getenv("BUILD_TAG")?: "Tag")
+            ((JavascriptExecutor) driver).executeScript("${sauceTag}build=" + System.getenv("JENKINS_BUILD_NUMBER") ?: "1")
         }
     }
     

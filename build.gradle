@@ -154,8 +154,8 @@ sauceLabs {
         }
     }
     account {
-        def sauceUserEnvVar = "SAUCE_USER_NAME"
-        def sauceKeyEnvVar = "SAUCE_API_KEY"
+        def sauceUserEnvVar = "SAUCE_USERNAME"
+        def sauceKeyEnvVar = "SAUCE_ACCESS_KEY"
         username = System.getenv(sauceUserEnvVar)
         accessKey = System.getenv(sauceKeyEnvVar)
     }

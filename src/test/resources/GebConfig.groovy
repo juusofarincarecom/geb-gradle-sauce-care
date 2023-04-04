@@ -72,8 +72,6 @@ environments {
     // run via “./gradlew firefoxTest”
     // See: http://code.google.com/p/selenium/wiki/FirefoxDriver
     firefox {
-        atCheckWaiting = 1
-        
         driver = { new FirefoxDriver() }
     }
     
@@ -85,8 +83,8 @@ environments {
 def sauceLabsBrowser = System.getProperty("geb.saucelabs.browser")
 if(sauceLabsBrowser) {
     driver = {
-        def sauceUserEnvVar = "SAUCE_USER_NAME"
-        def sauceKeyEnvVar = "SAUCE_API_KEY"
+        String sauceUserEnvVar = "SAUCE_USERNAME"
+        String sauceKeyEnvVar = "SAUCE_ACCESS_KEY"
         def username = System.getenv(sauceUserEnvVar)
         assert username
         def accessKey = System.getenv(sauceKeyEnvVar)
@@ -111,7 +109,6 @@ static String getCareBaseUrl(String env = "stg") {
     }
 }
 
-//https://plugins.jenkins.io/junit-attachments/
 reportingListener = new ReportingListener() {
     void onReport(Reporter reporter, ReportState reportState, List<File> reportFiles) {
         reportFiles.each {
