@@ -29,18 +29,12 @@ pipeline {
                           userRemoteConfigs: scm.userRemoteConfigs])
             }
         }
-        def drivers = [    ['Firefox Mac', 'firefoxMacTest'],
-                          ['Internet Explorer Win10', 'ieWin10Test'],
-                          ['Chrome Win11', 'chromeWin11Test'],
-                          ['Safari iPhone', 'safariIphoneTest'],
-                          ['Chrome Android', 'chromeAndroidTest']
-        ]
-    
+        def drivers = ['firefoxMac', 'ieWin10', 'chromeWin11' , 'safariIphone', 'chromeAndroid']
         drivers.each { driver ->
-            stage(driver[0]) {
+            stage(driver) {
                 steps {
                     sauce('qacare') {
-                        sh "./gradlew clean ${driver[1]} -DCARE_TEST_ENVIRONMENT=${params.CARE_TEST_ENVIRONMENT}"
+                        sh "./gradlew clean ${driver}Test -DCARE_TEST_ENVIRONMENT=${params.CARE_TEST_ENVIRONMENT}"
                     }
                 }
             }
