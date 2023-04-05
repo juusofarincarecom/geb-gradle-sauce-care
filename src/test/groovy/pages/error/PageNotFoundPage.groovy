@@ -1,8 +1,8 @@
 package pages.error
 
-import pages.BasePage
+import geb.Page
 
-class PageNotFoundPage extends BasePage {
+class PageNotFoundPage extends Page {
     
     static at = { error }
     

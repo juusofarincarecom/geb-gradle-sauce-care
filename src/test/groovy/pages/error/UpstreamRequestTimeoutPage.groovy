@@ -1,13 +1,13 @@
 package pages.error
 
-import pages.BasePage
+import geb.Page
 
-class UpstreamRequestTimeoutPage extends BasePage {
+class UpstreamRequestTimeoutPage extends Page {
     
-    static at = { upstreamRequestTimeout }
+    static at = { error }
     
     static content = {
-        upstreamRequestTimeout { $("pre", text: "upstream request timeout") }
+        error { $("pre", text: "upstream request timeout") }
     }
     
 }

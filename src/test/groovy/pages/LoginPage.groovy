@@ -6,8 +6,4 @@ class LoginPage extends BasePage {
     
     static url = "login"
     
-    static content = {
-        titleText { $("h1", text: "Log in") }
-    }
-    
 }

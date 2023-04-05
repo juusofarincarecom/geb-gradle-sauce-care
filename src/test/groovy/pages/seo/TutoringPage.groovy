@@ -1,5 +1,6 @@
-package pages
+package pages.seo
 
+import pages.BasePage
 import pages.modules.UrgencyModule
 import pages.modules.VisitorHeaderModule
 import pages.modules.ZipCodeModule
@@ -10,9 +11,4 @@ class TutoringPage extends BasePage {
     
     static url = "tutoring"
     
-    static content = {
-        popup { module(UrgencyModule) }
-        header { module(VisitorHeaderModule) }
-        zipCode { module(ZipCodeModule) }
-    }
 }
