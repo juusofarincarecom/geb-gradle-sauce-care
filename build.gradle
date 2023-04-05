@@ -16,8 +16,6 @@ description = "Geb SauceLabs for Care.com QA"
 
 compileJava.sourceCompatibility = thesourceCompatibility
 compileJava.targetCompatibility = thesourceCompatibility
-compileJava.options.encoding = "UTF-8"
-compileTestJava.options.encoding = "UTF-8"
 
 ext {
     // The local drivers we want to use
@@ -47,7 +45,6 @@ dependencies {
     //Allure
     implementation 'io.qameta.allure:allure-junit5:2.21.0'
     implementation "io.qameta.allure:allure-java-commons:$allureVersion"
-    //implementation "io.qameta.allure-allure-spock:$allureVersion"
     
     //JUnit5
     implementation "org.junit.jupiter:junit-jupiter-api:$junit5Version"

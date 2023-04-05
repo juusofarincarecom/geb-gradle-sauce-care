@@ -1,4 +1,6 @@
-package pages
+package pages.enroll
+
+import pages.BasePage
 
 class EnrollmentAppPage extends BasePage {
     
@@ -7,7 +9,7 @@ class EnrollmentAppPage extends BasePage {
     static url = "app/enrollment"
     
     static content = {
-        app { $("div", state: "entered") }
+        app (wait: true) { $("div", class: contains("MuiBox-root"), state: "entered") }
         zipCode(wait: true) { $("#zipCode-label") }
     }
 }

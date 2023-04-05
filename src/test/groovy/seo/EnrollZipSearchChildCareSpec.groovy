@@ -2,21 +2,23 @@ package seo
 
 import groovy.util.logging.Slf4j
 import io.qameta.allure.*
-import pages.EnrollmentAppPage
-import pages.TutoringPage
+import pages.enroll.EnrollmentAppPage
+import pages.seo.ChildCarePage
+import pages.seo.TutoringPage
 import spock.BaseSpec
+import spock.lang.Stepwise
 
 @Story("Story")
 @Epic("Epic")
 @Feature("Feature")
 @Severity(SeverityLevel.BLOCKER)
 @Slf4j
-class EnrollTutoringZipSpec extends BaseSpec {
+class EnrollZipSearchChildCareSpec extends BaseSpec {
     
-    @Description("Open Tutoring SEO Page and Start Enrollment with Zip Code")
-    def "Enroll tutoring SEO Page with Zip Code"() {
+    @Description("Go To ChildCare Page and Start Enrollment with Zip Code Search Submit")
+    def "Enroll with Zip Code Search from ChildCare Page"() {
         when:
-        page = to(TutoringPage)
+        page = to(ChildCarePage)
         and:
         page.popup.waitForPopUp()
         page.popup.clickCloseButton()
