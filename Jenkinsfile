@@ -17,6 +17,7 @@ def generateStage(job) {
 }
 
 pipeline {
+    triggers { cron { "H H/3 * * *" }  }
     agent { label 'build' }
     parameters {
         choice(name: 'CARE_TEST_ENVIRONMENT', choices: ['stg', 'dev', 'prod'], description: 'Test Environment')
