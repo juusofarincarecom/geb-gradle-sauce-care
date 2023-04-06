@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-ArrayList<String> jobs = System.getProperty("DEVICES").split(", ").collect { it.trim() }
+ArrayList<String> jobs = System.getProperty("DEVICES", "firefoxMac, edgeWin11, chromeMac, safariIos, chromeAndroid").split(", ").collect { it.trim() }
 
 def parallelStagesMap = jobs.collectEntries {
     ["${it}" : generateStage(it)]
