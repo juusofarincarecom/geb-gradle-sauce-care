@@ -7,7 +7,7 @@ import io.qameta.allure.Step
 import org.openqa.selenium.Capabilities
 import org.openqa.selenium.remote.RemoteWebDriver
 import pages.modules.UrgencyModule
-import pages.modules.VisitorHeaderModule
+
 import pages.modules.ZipCodeModule
 
 @Slf4j
@@ -19,13 +19,11 @@ class BasePage extends Page {
     
     static content = {
         applyToJobsButton { $(isMobile() ? "span" : "a", text: "Apply to jobs") }
-        popup { module(UrgencyModule) }
-        header { module(VisitorHeaderModule) }
+        urgencyModule { module(UrgencyModule) }
         zipCode { module(ZipCodeModule) }
     }
     
-    @Step("Click Apply to Jobs")
-    def clickApplyToJobs() {
+    @Step("Click Apply to Jobs") static def clickApplyToJobs() {
         applyToJobsButton.click()
     }
     

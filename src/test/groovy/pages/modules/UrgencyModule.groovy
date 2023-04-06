@@ -7,8 +7,8 @@ class UrgencyModule extends Module {
     
     static content = {
         urgencyModule(wait: "verySlow") { $("div", role: "presentation", class: contains("MuiDialog-root")) }
-        rightNow(wait: true) { $("p", text: "Right now") }
-        closeButton(wait: true, required: false) { $("button", class: contains("MuiIconButton-sizeSmall")) }
+        rightNow { urgencyModule.$("p", text: "Right now") }
+        closeButton(required: false) { urgencyModule.$("button", class: contains("MuiIconButton-sizeSmall")) }
     }
     
     @Step("Wait for Urgency Module to show")

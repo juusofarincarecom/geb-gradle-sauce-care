@@ -1,9 +1,6 @@
 package pages.seo
 
 import pages.BasePage
-import pages.modules.UrgencyModule
-import pages.modules.VisitorHeaderModule
-import pages.modules.ZipCodeModule
 
 class TutoringPage extends BasePage {
     
