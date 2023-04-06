@@ -1,14 +1,10 @@
 package seo
 
-
 import groovy.util.logging.Slf4j
 import io.qameta.allure.*
-import pages.seo.ChildCarePage
 import pages.enroll.EnrollmentAppPage
 import pages.seo.TutoringPage
 import spock.BaseSpec
-import spock.lang.Stepwise
-import spock.lang.Unroll
 
 @Story("Story")
 @Epic("Epic")
@@ -22,9 +18,9 @@ class EnrollZipSearchTutoringSpec extends BaseSpec {
         when:
         page = to(TutoringPage)
         and:
-        page.popup.waitForPopUp()
-        page.popup.clickCloseButton()
-        page.popup.closeButtonNotDisplayed()
+        page.urgencyModule.waitForUrgencyModule()
+        page.urgencyModule.clickCloseButton()
+        page.urgencyModule.closeButtonNotDisplayed()
         page.zipCode.addZipCode()
         page.zipCode.submitZipCode()
         then:

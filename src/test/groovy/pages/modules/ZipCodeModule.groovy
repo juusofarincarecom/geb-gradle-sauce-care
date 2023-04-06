@@ -19,6 +19,6 @@ class ZipCodeModule extends Module {
     
     @Step("Submit Zip Code")
     def submitZipCode() {
-        zipCode.singleElement().sendKeys(Keys.ENTER)
+        zipCode << Keys.ENTER
     }
 }

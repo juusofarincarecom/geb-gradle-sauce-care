@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-ArrayList<String> jobs = params.DRIVERS.split(",").collect { it.trim() }
+ArrayList<String> jobs = System.getProperty("DEVICES").split(", ").collect { it.trim() }
 
 def parallelStagesMap = jobs.collectEntries {
     ["${it}" : generateStage(it)]
@@ -13,15 +13,15 @@ def generateStage(job) {
                 sh "./gradlew clean ${job}Test -DCARE_TEST_ENVIRONMENT=${params.CARE_TEST_ENVIRONMENT}"
             }
         }
-    }
+    } as Object
 }
 
 pipeline {
     triggers { cron "H H/3 * * *" }
     agent { label 'build' }
     parameters {
-        choice(name: 'CARE_TEST_ENVIRONMENT', choices: ['stg', 'dev', 'prod'], description: 'Test Environment')
-        string(name: 'DRIVERS', defaultValue: "firefoxMac, edgeWin11, chromeMac, safariIos, chromeAndroid", description: 'SauceLabs Devices')
+        choice(name: 'BASEURL', choices: ['stg', 'dev', 'prod'], description: 'Select the target environment for your tests')
+        string(name: 'DEVICES', defaultValue: "firefoxMac, edgeWin11, chromeMac, safariIos, chromeAndroid", description: 'Enter a comma-separated list of devices')
     }
     options {
         timeout(time: 1, unit: 'HOURS')

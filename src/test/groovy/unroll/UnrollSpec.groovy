@@ -1,11 +1,10 @@
 package unroll
 
-
 import groovy.util.logging.Slf4j
 import io.qameta.allure.*
-import pages.ChildCarePage
-import pages.EnrollmentAppPage
-import pages.TutoringPage
+import pages.enroll.EnrollmentAppPage
+import pages.seo.ChildCarePage
+import pages.seo.TutoringPage
 import spock.BaseSpec
 import spock.lang.Unroll
 
@@ -23,9 +22,9 @@ class UnrollSpec extends BaseSpec {
         browser.clearCookies()
         page = to(startPage)
         and:
-        page.popup.waitForUrgencyModule()
-        page.popup.clickCloseButton()
-        page.popup.closeButtonNotDisplayed()
+        page.urgencyModule.waitForUrgencyModule()
+        page.urgencyModule.clickCloseButton()
+        page.urgencyModule.closeButtonNotDisplayed()
         page.zipCode.addZipCode()
         page.zipCode.submitZipCode()
         then:

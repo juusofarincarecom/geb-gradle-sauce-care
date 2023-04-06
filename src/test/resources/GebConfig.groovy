@@ -32,7 +32,7 @@ autoClearCookies = true
 autoClearWebStorage = true
 baseNavigatorWaiting = true
 reportOnTestFailureOnly = true
-unexpectedPages = [UpstreamRequestTimeoutPage, PageNotFoundPage, AkamaiReferencePage, AuthReqPage, NotAllowedErrorPage]
+unexpectedPages = [UpstreamRequestTimeoutPage, PageNotFoundPage, AkamaiReferencePage, ForbiddenErrorPage, NotAllowedErrorPage]
 requirePageAtCheckers = true
 quitDriverOnBrowserReset = false
 
