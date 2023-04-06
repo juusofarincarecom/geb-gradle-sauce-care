@@ -6,27 +6,28 @@ import io.qameta.allure.Step
 class UrgencyModule extends Module {
     
     static content = {
-        popup(wait: true, required: false) { $("div", role: "presentation", class: contains("MuiDialog-root")) }
-        rightNow(wait: true, required: false) { $("p", text: "Right now") }
+        urgencyModule(wait: "verySlow") { $("div", role: "presentation", class: contains("MuiDialog-root")) }
+        rightNow(wait: true) { $("p", text: "Right now") }
         closeButton(wait: true, required: false) { $("button", class: contains("MuiIconButton-sizeSmall")) }
     }
     
-    @Step("Wait for pop up to show")
-    def waitForPopUp() {
-        waitFor(10) { popup.displayed }
+    @Step("Wait for Urgency Module to show")
+    def waitForUrgencyModule() {
+        browser.waitFor("verySlow") { urgencyModule.displayed }
     }
     
-    @Step("Click Urgency Module Right Now Button")
+    @Step("Click Urgency Module 'Right Now' Button")
     def clickRightNowButton() {
         rightNow.click()
     }
     
-    @Step("Click Urgency Module Close Button")
+    @Step("Click Urgency Module 'Close' Button")
     def clickCloseButton() {
         closeButton.click()
     }
     
+    @Step("Wait For Urgency Module to not be displayed")
     def closeButtonNotDisplayed() {
-        waitFor(5) { !closeButton.displayed }
+        browser.waitFor() { !closeButton.displayed }
     }
 }

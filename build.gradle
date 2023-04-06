@@ -1,5 +1,3 @@
-//file:noinspection GroovyAssignabilityCheck
-
 plugins {
     id "java"
     id "idea"
@@ -18,10 +16,17 @@ compileJava.sourceCompatibility = thesourceCompatibility
 compileJava.targetCompatibility = thesourceCompatibility
 
 ext {
-    // The local drivers we want to use
-    drivers = ["firefox",
-               "chrome",
-               "chromeHeadless"
+    drivers = [
+        //local drivers
+        "firefox",
+        "chrome",
+        "chromeHeadless",
+        //saucelabs drivers
+        "edge_win",
+        "firefox_mac",
+        "chrome_mac",
+        "safari_ios",
+        "chrome_android"
     ]
     gebVersion = '7.0'
     seleniumVersion = '4.8.3'
@@ -43,7 +48,7 @@ dependencies {
     implementation "org.gebish:geb-junit5:$gebVersion"
     
     //Allure
-    implementation 'io.qameta.allure:allure-junit5:2.21.0'
+    implementation "io.qameta.allure:allure-junit5:$allureVersion"
     implementation "io.qameta.allure:allure-java-commons:$allureVersion"
     
     //JUnit5
@@ -54,16 +59,16 @@ dependencies {
     // Drivers
     implementation "org.seleniumhq.selenium:selenium-chrome-driver:$seleniumVersion"
     implementation "org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion"
+    implementation "org.seleniumhq.selenium:selenium-edge-driver:$seleniumVersion"
+    implementation "org.seleniumhq.selenium:selenium-remote-driver:$seleniumVersion"
+    implementation "org.seleniumhq.selenium:selenium-java:$seleniumVersion"
+    implementation "org.seleniumhq.selenium:selenium-support:$seleniumVersion"
     
     //appium
     implementation group: 'io.appium', name: 'java-client', version: '8.3.0'
     
-    //Screenshot functionality
-    implementation group: 'ru.yandex.qatools.ashot', name: 'ashot', version: '1.5.4'
-    
     // Sauce
-    sauceConnect 'com.saucelabs:ci-sauce:1.167'
-    implementation 'com.saucelabs:saucebindings-junit5:1.0.0'
+    sauceConnect 'com.saucelabs:ci-sauce:1.168'
     
     //Logging
     implementation 'org.slf4j:slf4j-api:2.0.7'
@@ -98,6 +103,7 @@ test {
     systemProperty("junit.jupiter.execution.parallel.enabled", "true")
     systemProperty("junit.jupiter.execution.parallel.config.strategy", "dynamic")
     systemProperty("junit.jupiter.extensions.autodetection.enabled", "true")
+    systemProperty("org.aspectj.weaver.Dump.exception", "false")
 }
 
 tasks.withType(Test) {
@@ -109,62 +115,12 @@ tasks.withType(Test) {
         testLogging.events "standardOut", "started", "passed", "skipped", "failed"
         testLogging.exceptionFormat "short"
     }
-    maxParallelForks = System.getProperty("forks", "8")
+    maxParallelForks = System.getProperty("forks", "8") as Integer
     forkEvery = 1
 }
 
 tasks.withType(GroovyCompile) {
     groovyOptions.forkOptions.memoryMaximumSize = '256m'
-}
-
-sauceLabs {
-    useTunnel = false
-    browsers {
-        // https://saucelabs.com/products/platform-configurator
-        // Plugin sets the capabilities to System Property geb.saucelabs.browser
-        firefox_mac {
-            capabilities browserName: "Firefox",
-                         platformName: "macOS 11.00",
-                         browserVersion: "latest"
-        }
-        ie_win10 {
-            capabilities browserName: "Internet Explorer",
-                         platformName: "Windows 10",
-                         browserVersion: "latest"
-        }
-        chrome_win11 {
-            capabilities browserName: "Chrome",
-                         platformName: "Windows 11",
-                         browserVersion: "latest"
-        }
-        safari_iphone {
-            capabilities browserName: "Safari",
-                         platformName: "iOS",
-                         "appium:deviceName": "iPhone Simulator",
-                         "appium:platformVersion": "16.2"
-        }
-        chrome_android {
-            capabilities browserName: "Chrome",
-                         platformName: "Android",
-                         "appium:deviceName": "Android GoogleAPI Emulator",
-                         "appium:platformVersion": "12.0"
-        }
-    }
-    account {
-        def sauceUserEnvVar = "SAUCE_USERNAME"
-        def sauceKeyEnvVar = "SAUCE_ACCESS_KEY"
-        username = System.getenv(sauceUserEnvVar)
-        accessKey = System.getenv(sauceKeyEnvVar)
-    }
-    task {
-        group JavaBasePlugin.VERIFICATION_GROUP
-    
-        outputs.upToDateWhen { false }  // Always run tests
-    
-        useJUnitPlatform()
-        systemProperty "geb.build.reportsDir", reporting.file("geb/$name")
-        systemProperty "geb.env", it.name.replace("Test", "")
-    }
 }
 
 allure {

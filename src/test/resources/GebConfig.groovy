@@ -4,30 +4,37 @@
 	See: http://www.gebish.org/manual/current/#configuration
 */
 
-
-import geb.driver.SauceLabsDriverFactory
 import geb.report.ReportState
 import geb.report.Reporter
 import geb.report.ReportingListener
 import geb.report.ScreenshotReporter
+import io.appium.java_client.android.AndroidDriver
+import io.appium.java_client.ios.IOSDriver
 import io.qameta.allure.Allure
 import org.apache.commons.io.FilenameUtils
+import org.openqa.selenium.MutableCapabilities
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
+import org.openqa.selenium.edge.EdgeOptions
 import org.openqa.selenium.firefox.FirefoxDriver
+import org.openqa.selenium.firefox.FirefoxOptions
+import org.openqa.selenium.remote.RemoteWebDriver
 import pages.error.*
 
 import java.nio.file.Files
 
-cacheDriver = false
-cacheDriverPerThread = false
-atCheckWaiting = false
-autoClearCookies = false
+import static org.openqa.selenium.Platform.*
+
+cacheDriver = true
+cacheDriverPerThread = true
+atCheckWaiting = true
+autoClearCookies = true
+autoClearWebStorage = true
 baseNavigatorWaiting = true
 reportOnTestFailureOnly = true
 unexpectedPages = [UpstreamRequestTimeoutPage, PageNotFoundPage, AkamaiReferencePage, AuthReqPage, NotAllowedErrorPage]
 requirePageAtCheckers = true
-
+quitDriverOnBrowserReset = false
 
 // 7.2.6. Waiting
 waiting {
@@ -36,7 +43,7 @@ waiting {
     includeCauseInMessage = true
     presets {
         verySlow {
-            timeout = 20
+            timeout = 30
             retryInterval = 2
         }
         slow {
@@ -49,55 +56,98 @@ waiting {
     }
 }
 
-// Local Drivers
-environments {
-	
-	// run via “./gradlew chromeTest”
-	// See: http://code.google.com/p/selenium/wiki/ChromeDriver
-	chrome {
-		driver = { new ChromeDriver() }
-	}
+static def isSauceLabs(String user = System.getenv("SAUCE_USERNAME"), String key = System.getenv("SAUCE_ACCESS_KEY")) {
+    assert user
+    assert key
+}
 
-	// run via “./gradlew chromeHeadlessTest”
-	// See: http://code.google.com/p/selenium/wiki/ChromeDriver
-	chromeHeadless {
-		driver = {
-			ChromeOptions o = new ChromeOptions()
-			o.addArguments('headless')
-			new ChromeDriver(o)
-		}
-	}
-    
+def url = new URL("https://${System.getenv("SAUCE_USERNAME")}:${System.getenv("SAUCE_ACCESS_KEY")}@ondemand.us-west-1.saucelabs.com:443/wd/hub")
+
+environments {
+    // run via “./gradlew chromeTest”
+    // See: http://code.google.com/p/selenium/wiki/ChromeDriver
+    chrome { driver = { new ChromeDriver() } }
+    // run via “./gradlew chromeHeadlessTest”
+    // See: http://code.google.com/p/selenium/wiki/ChromeDriver
+    chromeHeadless {
+        driver = {
+            ChromeOptions o = new ChromeOptions()
+            o.addArguments('headless')
+            new ChromeDriver(o)
+        }
+    }
     // run via “./gradlew firefoxTest”
     // See: http://code.google.com/p/selenium/wiki/FirefoxDriver
-    firefox {
-        driver = { new FirefoxDriver() }
-    }
+    firefox { driver = { new FirefoxDriver() } }
     
-}
-
-// Cloud Drivers
-// run via “./gradlew allSauceLabsTests”
-// See: build.gradle sauceLabs task and https://opensource.saucelabs.com/sauce_bindings/
-def sauceLabsBrowser = System.getProperty("geb.saucelabs.browser")
-if(sauceLabsBrowser) {
-    driver = {
-        String sauceUserEnvVar = "SAUCE_USERNAME"
-        String sauceKeyEnvVar = "SAUCE_ACCESS_KEY"
-        def username = System.getenv(sauceUserEnvVar)
-        assert username
-        def accessKey = System.getenv(sauceKeyEnvVar)
-        assert accessKey
-        new SauceLabsDriverFactory().create(sauceLabsBrowser, username, accessKey)
+    //run via “./gradlew {driver}
+    //saucelabs drivers: ["edge_win", "firefox_mac", "chrome_mac", "safari_ios", "chrome_android"]
+    edge_win {
+        driver = {
+            isSauceLabs()
+            EdgeOptions edgeOptions = new EdgeOptions()
+            edgeOptions.setPlatformName(WIN11.toString())
+            edgeOptions.setBrowserVersion("latest")
+            new RemoteWebDriver(url, edgeOptions)
+        }
+    }
+    firefox_mac {
+        driver = {
+            isSauceLabs()
+            FirefoxOptions firefoxOptions = new FirefoxOptions()
+            firefoxOptions.setPlatformName(MONTEREY.toString())
+            firefoxOptions.setBrowserVersion("latest")
+            new RemoteWebDriver(url, firefoxOptions)
+        }
+    }
+    chrome_mac {
+        driver = {
+            isSauceLabs()
+            ChromeOptions chromeOptions = new ChromeOptions()
+            chromeOptions.setPlatformName(MONTEREY.toString())
+            chromeOptions.setBrowserVersion("latest")
+            new RemoteWebDriver(url, chromeOptions)
+        }
+    }
+    safari_ios {
+        driver = {
+            isSauceLabs()
+            MutableCapabilities caps = new MutableCapabilities()
+            caps.setCapability("platformName", "iOS")
+            caps.setCapability("browserName", "Safari")
+            caps.setCapability("appium:deviceName", "iPhone Simulator")
+            caps.setCapability("appium:platformVersion", "16.2")
+            caps.setCapability("appium:automationName", "XCUITest")
+            MutableCapabilities sauceOptions = new MutableCapabilities()
+            sauceOptions.setCapability("appiumVersion", "2.0.0-beta56")
+            sauceOptions.setCapability("build", "<your build id>")
+            sauceOptions.setCapability("name", "<your test name>")
+            caps.setCapability("sauce:options", sauceOptions)
+            new IOSDriver(url, caps)
+        }
+    }
+    chrome_android {
+        driver = {
+            isSauceLabs()
+            MutableCapabilities caps = new MutableCapabilities();
+            caps.setCapability("platformName", "Android")
+            caps.setCapability("browserName", "Chrome")
+            caps.setCapability("appium:deviceName", "Android GoogleAPI Emulator")
+            caps.setCapability("appium:platformVersion", "12.0")
+            caps.setCapability("appium:automationName", "UiAutomator2")
+            MutableCapabilities sauceOptions = new MutableCapabilities()
+            sauceOptions.setCapability("appiumVersion", "2.0.0-beta56")
+            sauceOptions.setCapability("build", "<your build id>")
+            sauceOptions.setCapability("name", "<your test name>")
+            caps.setCapability("sauce:options", sauceOptions)
+            new AndroidDriver(url, caps)
+        }
     }
 }
 
-// To run the tests with local and cloud drivers just run “./gradlew test”
-
-// Care.com BaseUrl
 baseUrl = getCareBaseUrl(System.getProperty("CARE_TEST_ENVIRONMENT", "stg"))
 
-static String getCareBaseUrl(String env = "stg") {
+static def getCareBaseUrl(String env = "stg") {
     switch(env) {
         case "dev":
             return "https://www.dev.carezen.net/"
