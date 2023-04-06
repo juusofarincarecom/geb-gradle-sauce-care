@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-def jobs = ['firefoxMac', 'ieWin10', 'chromeWin11', 'safariIphone', 'chromeAndroid']
+ArrayList<String> jobs = params.DRIVERS.split(",").collect { it.trim() }
 
 def parallelStagesMap = jobs.collectEntries {
     ["${it}" : generateStage(it)]
@@ -21,6 +21,7 @@ pipeline {
     agent { label 'build' }
     parameters {
         choice(name: 'CARE_TEST_ENVIRONMENT', choices: ['stg', 'dev', 'prod'], description: 'Test Environment')
+        string(name: 'DRIVERS', defaultValue: "firefoxMac, edgeWin11, chromeMac, safariIos, chromeAndroid", description: 'SauceLabs Devices')
     }
     options {
         timeout(time: 1, unit: 'HOURS')

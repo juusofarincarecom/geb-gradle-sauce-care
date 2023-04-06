@@ -29,10 +29,7 @@ class BuildInfoAggregator {
         ImmutableMap<String, String> environmentValuesSet = ImmutableMap
             .of("Build", System.getProperty("JENKINS_BUILD_NUMBER", "1"),
                 "Test Environment", System.getProperty("CARE_TEST_ENVIRONMENT", "stg"),
-                "Browser", System.getProperty("browserName", "Chrome"),
-                "Platform", System.getProperty("platformName", "Mac"),
-                "browserVersion", System.getProperty("browserVersion", "latest"))
-        
+                "Driver", System.getProperty("geb.env", "Chrome"))
         try {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance()
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder()
