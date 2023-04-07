@@ -125,7 +125,7 @@ tasks.withType(GroovyCompile) {
 
 allure {
     autoconfigure = false
-    aspectjweaver = false
+    aspectjweaver = true
     version = allureVersion
     resultsDir = file("allure-results")
     reportDir = file("allure-report")

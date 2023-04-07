@@ -23,7 +23,8 @@ class BasePage extends Page {
         zipCode { module(ZipCodeModule) }
     }
     
-    @Step("Click Apply to Jobs") static def clickApplyToJobs() {
+    @Step("Click Apply to Jobs")
+    def clickApplyToJobs() {
         applyToJobsButton.click()
     }
     

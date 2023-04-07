@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-ArrayList<String> jobs = System.getProperty("DEVICES", "chrome_android chrome_mac edge_win firefox_mac safari_ios").split(" ").collect { it.trim() }
+ArrayList<String> jobs = System.getProperty("DEVICES", 'chrome_android\nchrome_mac\nedge_win\nfirefox_mac\nsafari_ios').split("\n").collect { it.trim() }
 def parallelStagesMap = jobs.collectEntries {
     ["${it}" : generateStage(it)]
 }
@@ -10,7 +10,18 @@ def generateStage(job) {
         stage("stage: ${job}") {
             sauce("qacare") {
                 sh "./gradlew clean ${job}Test -DCARE_TEST_ENVIRONMENT=${params.CARE_TEST_ENVIRONMENT}"
-            }
+                def testStatus = ""
+                def testResultsPath = "build/test-results/${job}/*.xml"
+                summary = junit allowEmptyResults: true, testDataPublishers: [[$class: 'SauceOnDemandReportPublisher', jobVisibility: 'public']], testResults: testResultsPath
+                saucePublisher testDataPublishers: [[$class: 'SauceOnDemandReportPublisher', jobVisibility: 'public']]
+                testStatus = "\nTotal: ${summary.totalCount}, Passed: ${summary.passCount}, Failures: ${summary.failCount}, Skipped: ${summary.skipCount}"
+                slackSend color: slackMessageColor(),
+                          botUser: true,
+                          channel: '@juuso.farin',
+                          message: "SEO Visitor Test Result : #${currentBuild.result} <${BUILD_URL}allure|report>, <${BUILD_URL}|job>" +
+                                   testStatus,
+                          tokenCredentialId: 'slack-api-bot-user-oauth-token'
+                }
         }
     } as Object
 }
@@ -20,7 +31,7 @@ pipeline {
     agent { label 'build' }
     parameters {
         choice(name: 'BASEURL', choices: ['stg', 'dev', 'prod'], description: 'Select the target environment for your tests')
-        string(name: 'DEVICES', defaultValue: "chrome_android chrome_mac edge_win firefox_mac safari_ios", description: 'Enter a space-separated list of devices')
+        text(name: 'DEVICES', defaultValue: 'chrome_android\nchrome_mac\nedge_win\nfirefox_mac\nsafari_ios', description: 'Enter a newline-separated list of devices')
     }
     options {
         timeout(time: 1, unit: 'HOURS')
@@ -58,5 +69,22 @@ pipeline {
                        results: [[path: 'build/reports/allure-results']]
             }
         }
+    }
+}
+
+String slackMessageColor() {
+    switch(currentBuild.result) {
+        case 'SUCCESS':
+            return '#00ff26' //Green
+            break
+        case 'UNSTABLE':
+            return '#f6ff00' //Yellow
+            break
+        case 'FAILURE':
+            return '#ff0000' //Red
+            break
+        default:
+            return '#0044ff' //Blue
+            break
     }
 }

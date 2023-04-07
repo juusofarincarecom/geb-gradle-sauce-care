@@ -1,9 +1,10 @@
 package pages.modules
 
-import geb.Module
+import groovy.util.logging.Slf4j
 import io.qameta.allure.Step
 
-class UrgencyModule extends Module {
+@Slf4j
+class UrgencyModule extends BaseModule {
     
     static content = {
         urgencyModule(wait: "verySlow") { $("div", role: "presentation", class: contains("MuiDialog-root")) }
@@ -28,6 +29,15 @@ class UrgencyModule extends Module {
     
     @Step("Wait For Urgency Module to not be displayed")
     def closeButtonNotDisplayed() {
-        browser.waitFor() { !closeButton.displayed }
+        sleep(2000)
+        //log.info("closeButton.displayed: " + closeButton.displayed.toString())
+        log.info("closeButton.isDisplayed(): " + closeButton.isDisplayed())
+        log.info("closeButton.isEmpty(): " + closeButton.isEmpty())
+        log.info("closeButton.isFocused(): " + closeButton.isFocused())
+        log.info("closeButton.value(): " + closeButton.value())
+        log.info("closeButton.allElements(): " + closeButton.allElements())
+        log.info("closeButton.tag(): " + closeButton.tag())
+        
+        assert !closeButton.displayed
     }
 }
