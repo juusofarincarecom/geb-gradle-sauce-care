@@ -16,13 +16,12 @@ import java.security.InvalidKeyException
 import java.security.NoSuchAlgorithmException
 
 import static java.nio.charset.StandardCharsets.US_ASCII
-import static org.apache.commons.lang3.StringUtils.isNotBlank
 
 @Slf4j
 class BaseSpec extends GebReportingSpec {
     
     @Shared
-    Boolean isSauceLabs = isNotBlank(USER_ENV_VAR)
+    Boolean isSauceLabs = USER_ENV_VAR?.trim() ?: false
     
     /**
      * Instance variables for the Sauce Job.*/
