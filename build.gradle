@@ -5,7 +5,7 @@ plugins {
     id "com.github.erdi.webdriver-binaries" version "2.7"
     id "com.github.erdi.idea-base" version "2.2"
     id "org.gebish.saucelabs" version "7.0"
-    id 'io.qameta.allure' version '2.8.1'
+    id 'io.qameta.allure' version '2.11.2'
 }
 
 group = thegroup
@@ -37,25 +37,27 @@ ext {
 repositories {
     mavenCentral()
     mavenLocal()
+    google()
 }
+//configurations {
+//    compile.exclude module: 'aspectjweaver'
+//}
 
 dependencies {
+    implementation 'org.asynchttpclient:async-http-client-netty-utils:2.12.3'
     
-    // If using Spock, need to depend on geb-spock
-    implementation "org.gebish:geb-spock:$gebVersion"
-
+    //implementation group: 'org.aspectj', name: 'aspectjweaver', version: '1.9.19'
+    
     // If using JUnit 5, need to depend on geb-junit5
     implementation "org.gebish:geb-junit5:$gebVersion"
+    implementation "org.junit.jupiter:junit-jupiter-engine:${junit5Version}"
+    implementation "org.junit.jupiter:junit-jupiter-params:${junit5Version}"
+    implementation 'org.apache.groovy:groovy-all:4.0.11'
     
     //Allure
     implementation "io.qameta.allure:allure-junit5:$allureVersion"
     implementation "io.qameta.allure:allure-java-commons:$allureVersion"
     
-    //JUnit5
-    implementation "org.junit.jupiter:junit-jupiter-api:$junit5Version"
-    implementation "org.junit.jupiter:junit-jupiter-engine:$junit5Version"
-    implementation "org.junit.jupiter:junit-jupiter-params:$junit5Version"
-
     // Drivers
     implementation "org.seleniumhq.selenium:selenium-chrome-driver:$seleniumVersion"
     implementation "org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion"
@@ -73,7 +75,7 @@ dependencies {
     //Logging
     implementation 'org.slf4j:slf4j-api:2.0.7'
     implementation 'org.slf4j:slf4j-simple:2.0.7'
-
+    
 }
 
 webdriverBinaries {
@@ -94,17 +96,15 @@ drivers.each { driver ->
         useJUnitPlatform()
         systemProperty "geb.build.reportsDir", reporting.file("geb/$name")
         systemProperty "geb.env", driver
+        systemProperty "org.aspectj.weaver.Dump.exception", "false"
     }
 }
 
 test {
     dependsOn drivers.collect { tasks["${it}Test"] }
     enabled = true
-    systemProperty("junit.jupiter.execution.parallel.enabled", "true")
-    systemProperty("junit.jupiter.execution.parallel.config.strategy", "dynamic")
-    systemProperty("junit.jupiter.extensions.autodetection.enabled", "true")
-    systemProperty("org.aspectj.weaver.Dump.exception", "false")
 }
+
 
 tasks.withType(Test) {
     maxHeapSize = "1g"
@@ -123,18 +123,14 @@ tasks.withType(GroovyCompile) {
     groovyOptions.forkOptions.memoryMaximumSize = '256m'
 }
 
-allure {
-    autoconfigure = false
-    aspectjweaver = true
-    version = allureVersion
-    resultsDir = file("allure-results")
-    reportDir = file("allure-report")
-}
-
 task aggregateBuildInfo(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     systemProperties(System.properties)
     mainClass = "reporting.BuildInfoAggregator"
+}
+
+allure {
+    version = '2.21.0'
 }
 
 [test].forEach {it.finalizedBy(aggregateBuildInfo) }

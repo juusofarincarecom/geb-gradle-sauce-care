@@ -9,10 +9,10 @@ def generateStage(job) {
     return {
         stage("stage: ${job}") {
             sauce("qacare") {
-                sh "./gradlew clean ${job}Test -DCARE_TEST_ENVIRONMENT=${params.CARE_TEST_ENVIRONMENT}"
+                sh "./gradlew clean ${job}Test -DTEST_ENVIRONMENT=${System.getProperty("TEST_ENVIRONMENT", "stg")}"
                 def testStatus = ""
                 def testResultsPath = "build/test-results/${job}/*.xml"
-                summary = junit allowEmptyResults: true, testDataPublishers: [[$class: 'SauceOnDemandReportPublisher', jobVisibility: 'public']], testResults: testResultsPath
+                def summary = junit allowEmptyResults: true, testDataPublishers: [[$class: 'SauceOnDemandReportPublisher', jobVisibility: 'public']], testResults: testResultsPath
                 saucePublisher testDataPublishers: [[$class: 'SauceOnDemandReportPublisher', jobVisibility: 'public']]
                 testStatus = "\nTotal: ${summary.totalCount}, Passed: ${summary.passCount}, Failures: ${summary.failCount}, Skipped: ${summary.skipCount}"
                 slackSend color: slackMessageColor(),
@@ -30,7 +30,7 @@ pipeline {
     triggers { cron "H H/3 * * *" }
     agent { label 'build' }
     parameters {
-        choice(name: 'BASEURL', choices: ['stg', 'dev', 'prod'], description: 'Select the target environment for your tests')
+        choice(name: 'TEST_ENVIRONMENT', choices: ['stg', 'dev', 'prod'], description: 'Select the target environment for your tests')
         text(name: 'DEVICES', defaultValue: 'chrome_android\nchrome_mac\nedge_win\nfirefox_mac\nsafari_ios', description: 'Enter a newline-separated list of devices')
     }
     options {

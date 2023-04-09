@@ -1,14 +1,22 @@
-package spock
+package seo
 
 import geb.Page
-import geb.spock.GebReportingSpec
+import geb.junit5.GebReportingTest
 import groovy.util.logging.Slf4j
 import io.qameta.allure.Allure
 import io.qameta.allure.Step
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtensionContext
+import org.junit.jupiter.api.extension.ParameterResolver
 import org.openqa.selenium.Capabilities
 import org.openqa.selenium.JavascriptExecutor
 import org.openqa.selenium.remote.RemoteWebDriver
-import spock.lang.Shared
+import pages.BasePage
+import pages.enroll.EnrollmentAppPage
+import pages.enroll.ProviderProfileFormEnrollmentPage
+import pages.enroll.SinglePageEnrollmentPage
 
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
@@ -18,10 +26,11 @@ import java.security.NoSuchAlgorithmException
 import static java.nio.charset.StandardCharsets.US_ASCII
 
 @Slf4j
-class BaseSpec extends GebReportingSpec {
+class Junit5BaseTest extends GebReportingTest {
     
-    @Shared
     Boolean isSauceLabs = USER_ENV_VAR?.trim() ?: false
+    
+    Page page
     
     /**
      * Instance variables for the Sauce Job.*/
@@ -35,29 +44,30 @@ class BaseSpec extends GebReportingSpec {
     private static final String KEY = String.format("%s:%s", USER_ENV_VAR, ACCESS_KEY_ENV_VAR)
     private static final String SAUCE_TESTS_URL = "https://app.saucelabs.com/tests"
     
-    @Shared
-    Page page
+    @BeforeAll
+    static void init(){
+        System.out.println("BeforeAll init() method called");
+    }
     
-    @Step("Setup")
-    def setup() {
-        if(isSauceLabs) {
-            setupSauceLabsTestData()
-        }
+    @BeforeEach
+    void initEach(){
+        System.out.println("BeforeEach initEach() method called");
+        if(isSauceLabs) { setupSauceLabsTestData() }
     }
     
     @Step("Setup SauceLabs Test Data")
     private void setupSauceLabsTestData() {
         if(isSauceLabs) {
-            this.sessionId = (((RemoteWebDriver) driver).getSessionId()).toString()
+            this.sessionId = (((RemoteWebDriver) browser.driver).getSessionId()).toString()
             this.sauceUrl = getSauceLink(sessionId)
             String testName = this.class.name
             log.info("SauceOnDemandSessionID=${sessionId} job-name=${testName}")
             log.info("Test Job Link: " + sauceUrl)
             log.info("[[ATTACHMENT|${sauceUrl}]]")
             Allure.addAttachment("SauceLabs Job Video", "text/html", sauceUrl)
-            ((JavascriptExecutor) driver).executeScript(String.format("sauce:job-name=%s", testName))
-            ((JavascriptExecutor) driver).executeScript("sauce:job-tags=" +  System.getenv("BUILD_TAG")?: "Tag")
-            ((JavascriptExecutor) driver).executeScript("sauce:job-build=" + System.getenv("JENKINS_BUILD_NUMBER") ?: "1")
+            ((JavascriptExecutor) browser.driver).executeScript(String.format("sauce:job-name=%s", testName))
+            ((JavascriptExecutor) browser.driver).executeScript("sauce:job-tags=" +  System.getenv("BUILD_TAG")?: "Tag")
+            ((JavascriptExecutor) browser.driver).executeScript("sauce:job-build=" + System.getenv("JENKINS_BUILD_NUMBER") ?: "1")
         }
     }
     

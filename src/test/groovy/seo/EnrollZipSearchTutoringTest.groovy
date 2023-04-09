@@ -2,18 +2,18 @@ package seo
 
 import groovy.util.logging.Slf4j
 import io.qameta.allure.*
+import org.junit.jupiter.api.Test
 import pages.enroll.EnrollmentAppPage
 import pages.seo.TutoringPage
-import spock.BaseSpec
 
 @Story("Story")
 @Epic("Epic")
 @Feature("Feature")
 @Severity(SeverityLevel.BLOCKER)
 @Slf4j
-class EnrollZipSearchTutoringSpec extends BaseSpec {
+class EnrollZipSearchTutoringTest extends Junit5BaseTest {
     
-    @Description("Go To Tutoring Page and Start Enrollment with Zip Code Search Submit")
+    @Test
     def "Enroll with Zip Code Search from Tutoring Page"() {
         when:
         page = to(TutoringPage)

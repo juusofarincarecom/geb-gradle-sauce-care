@@ -145,7 +145,7 @@ environments {
     }
 }
 
-baseUrl = getCareBaseUrl(System.getProperty("CARE_TEST_ENVIRONMENT", "stg"))
+baseUrl = getCareBaseUrl(System.getProperty("TEST_ENVIRONMENT", "stg"))
 
 static def getCareBaseUrl(String env = "stg") {
     switch(env) {
