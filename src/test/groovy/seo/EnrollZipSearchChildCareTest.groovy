@@ -7,6 +7,7 @@ import io.qameta.allure.Epic
 import io.qameta.allure.Feature
 import io.qameta.allure.Story
 import org.junit.Ignore
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import pages.enroll.EnrollmentAppPage
 import pages.seo.ChildCarePage
@@ -15,10 +16,10 @@ import pages.seo.ChildCarePage
 @Epic("Epic")
 @Feature("Feature")
 @Story("Story")
-@Ignore
 class EnrollZipSearchChildCareTest extends Junit5BaseTest {
     
     @Test
+    @Disabled
     @Description("Go To ChildCare Page and Start Enrollment with Zip Code Search Submit")
     void EnrollZipSearchChildCare() {
         page = to(ChildCarePage)

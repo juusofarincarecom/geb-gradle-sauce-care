@@ -8,7 +8,7 @@ import io.qameta.allure.Severity
 import io.qameta.allure.SeverityLevel
 import io.qameta.allure.Story
 import org.junit.Ignore
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import pages.BasePage
@@ -21,12 +21,13 @@ import pages.seo.TutoringPage
 @Feature("Feature")
 @Story("Story")
 @Severity(SeverityLevel.BLOCKER)
-@Ignore
 class ParametrizedExampleTest extends Junit5BaseTest {
     
         @ParameterizedTest(name = "Verify title of {0} page")
         @ValueSource(classes = [TutoringPage, ChildCarePage])
+        @Disabled
         void ParametrizedExample(Class<? extends Page> pageClass) {
+            browser.clearCookies()
             Page inputPage = pageClass.newInstance()
             page = to(inputPage as Class<BasePage>)
             page.urgencyModule.waitForUrgencyModule();
