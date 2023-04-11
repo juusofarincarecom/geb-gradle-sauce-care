@@ -95,7 +95,7 @@ environments {
         driver = {
             isSauceLabs()
             FirefoxOptions firefoxOptions = new FirefoxOptions()
-            firefoxOptions.setPlatformName(MONTEREY.toString())
+            firefoxOptions.setPlatformName("macOS 13")
             firefoxOptions.setBrowserVersion("latest")
             new RemoteWebDriver(url, firefoxOptions)
         }
@@ -104,7 +104,7 @@ environments {
         driver = {
             isSauceLabs()
             ChromeOptions chromeOptions = new ChromeOptions()
-            chromeOptions.setPlatformName(MONTEREY.toString())
+            chromeOptions.setPlatformName("macOS 13")
             chromeOptions.setBrowserVersion("latest")
             new RemoteWebDriver(url, chromeOptions)
         }

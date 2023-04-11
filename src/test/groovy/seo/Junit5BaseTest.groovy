@@ -46,12 +46,12 @@ class Junit5BaseTest extends GebReportingTest {
     
     @BeforeAll
     static void init(){
-        System.out.println("BeforeAll init() method called");
+        log.info("BeforeAll init() method called");
     }
     
     @BeforeEach
     void initEach(){
-        System.out.println("BeforeEach initEach() method called");
+        log.info("BeforeEach initEach() method called");
         if(isSauceLabs) { setupSauceLabsTestData() }
     }
     

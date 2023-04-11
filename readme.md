@@ -4,7 +4,7 @@
 
 ## Description
 
-This is an example of incorporating Geb into a Gradle build. It shows the use of Spock and JUnit 4 tests.
+This is an example of incorporating Geb into a Gradle build. It shows the use of JUnit 5 tests.
 
 The build is set up to work with Firefox and Chrome. Have a look at the `build.gradle` and the `src/test/resources/GebConfig.groovy` files.
 

@@ -1,31 +1,35 @@
 package seo
 
+
 import groovy.util.logging.Slf4j
-import io.qameta.allure.*
+import io.qameta.allure.Description
+import io.qameta.allure.Epic
+import io.qameta.allure.Feature
+import io.qameta.allure.Story
 import org.junit.jupiter.api.Test
+import pages.BasePage
 import pages.enroll.EnrollmentAppPage
+import pages.enroll.ProviderProfileFormEnrollmentPage
+import pages.enroll.SinglePageEnrollmentPage
 import pages.seo.ChildCarePage
 
-@Story("Story")
+@Slf4j
 @Epic("Epic")
 @Feature("Feature")
-@Severity(SeverityLevel.BLOCKER)
-@Slf4j
+@Story("Story")
 class EnrollZipSearchChildCareTest extends Junit5BaseTest {
-
+    
     @Test
     @Description("Go To ChildCare Page and Start Enrollment with Zip Code Search Submit")
-    def "Enroll with Zip Code Search from ChildCare Page"() {
-        when:
+    void EnrollZipSearchChildCare() {
         page = to(ChildCarePage)
-        and:
         page.urgencyModule.waitForUrgencyModule()
         page.urgencyModule.clickCloseButton()
         page.urgencyModule.closeButtonNotDisplayed()
         page.zipCode.addZipCode()
         page.zipCode.submitZipCode()
-        then:
         at(EnrollmentAppPage)
     }
+    
     
 }

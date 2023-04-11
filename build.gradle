@@ -39,14 +39,13 @@ repositories {
     mavenLocal()
     google()
 }
-//configurations {
-//    compile.exclude module: 'aspectjweaver'
-//}
+configurations {
+    compile.exclude module: 'aspectjweaver'
+}
 
 dependencies {
-    implementation 'org.asynchttpclient:async-http-client-netty-utils:2.12.3'
-    
-    //implementation group: 'org.aspectj', name: 'aspectjweaver', version: '1.9.19'
+    //implementation 'org.asynchttpclient:async-http-client-netty-utils:2.12.3'
+    implementation group: 'org.aspectj', name: 'aspectjweaver', version: '1.9.19'
     
     // If using JUnit 5, need to depend on geb-junit5
     implementation "org.gebish:geb-junit5:$gebVersion"
@@ -130,7 +129,7 @@ task aggregateBuildInfo(type: JavaExec) {
 }
 
 allure {
-    version = '2.21.0'
+    version = allureVersion
 }
 
 [test].forEach {it.finalizedBy(aggregateBuildInfo) }
