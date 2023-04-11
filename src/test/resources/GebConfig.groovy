@@ -19,6 +19,7 @@ import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.edge.EdgeOptions
 import org.openqa.selenium.firefox.FirefoxDriver
 import org.openqa.selenium.firefox.FirefoxOptions
+import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.remote.RemoteWebDriver
 import pages.error.*
 
@@ -127,23 +128,23 @@ environments {
             new IOSDriver(url, caps)
         }
     }
-    chrome_android {
-        driver = {
-            isSauceLabs()
-            MutableCapabilities caps = new MutableCapabilities();
-            caps.setCapability("platformName", "Android")
-            caps.setCapability("browserName", "Chrome")
-            caps.setCapability("appium:deviceName", "Android GoogleAPI Emulator")
-            caps.setCapability("appium:platformVersion", "12.0")
-            caps.setCapability("appium:automationName", "UiAutomator2")
-            MutableCapabilities sauceOptions = new MutableCapabilities()
-            sauceOptions.setCapability("appiumVersion", "2.0.0-beta56")
-            sauceOptions.setCapability("build", "<your build id>")
-            sauceOptions.setCapability("name", "<your test name>")
-            caps.setCapability("sauce:options", sauceOptions)
-            new AppiumDriver(url, caps)
-        }
-    }
+//    chrome_android {
+//        driver = {
+//            isSauceLabs()
+//            MutableCapabilities caps = new MutableCapabilities();
+//            caps.setCapability("platformName", "Android")
+//            caps.setCapability("browserName", "Chrome")
+//            caps.setCapability("appium:deviceName", "Android GoogleAPI Emulator")
+//            caps.setCapability("appium:platformVersion", "12.0")
+//            caps.setCapability("appium:automationName", "UiAutomator2")
+//            MutableCapabilities sauceOptions = new MutableCapabilities()
+//            sauceOptions.setCapability("appiumVersion", "2.0.0-beta56")
+//            sauceOptions.setCapability("build", "<your build id>")
+//            sauceOptions.setCapability("name", "<your test name>")
+//            caps.setCapability("sauce:options", sauceOptions)
+//            new AndroidDriver(url, caps)
+//        }
+//    }
 }
 
 baseUrl = getCareBaseUrl(System.getProperty("TEST_ENVIRONMENT", "stg"))

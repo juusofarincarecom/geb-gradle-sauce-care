@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-ArrayList<String> jobs = System.getProperty("DEVICES", 'chrome_android\nchrome_mac\nedge_win\nfirefox_mac\nsafari_ios').split("\n").collect { it.trim() }
+ArrayList<String> jobs = System.getProperty("DEVICES", 'chrome_mac\nedge_win\nfirefox_mac\nsafari_ios').split("\n").collect { it.trim() }
 def parallelStagesMap = jobs.collectEntries {
     ["${it}" : generateStage(it)]
 }
@@ -31,7 +31,7 @@ pipeline {
     agent { label 'build' }
     parameters {
         choice(name: 'TEST_ENVIRONMENT', choices: ['stg', 'dev', 'prod'], description: 'Select the target environment for your tests')
-        text(name: 'DEVICES', defaultValue: 'chrome_android\nchrome_mac\nedge_win\nfirefox_mac\nsafari_ios', description: 'Enter a newline-separated list of devices')
+        text(name: 'DEVICES', defaultValue: 'chrome_mac\nedge_win\nfirefox_mac\nsafari_ios', description: 'Enter a newline-separated list of devices')
     }
     options {
         timeout(time: 1, unit: 'HOURS')

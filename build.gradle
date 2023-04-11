@@ -26,10 +26,11 @@ ext {
         "firefox_mac",
         "chrome_mac",
         "safari_ios",
-        "chrome_android"
+        //"chrome_android" Uncomment when appium+selenium is compatible again
+        //https://github.com/appium/java-client/issues/1872#issuecomment-1484017595
     ]
     gebVersion = '7.0'
-    seleniumVersion = '4.7.0'
+    seleniumVersion = '4.8.2'
     allureVersion = '2.21.0'
     junit5Version = '5.9.2'
 }
