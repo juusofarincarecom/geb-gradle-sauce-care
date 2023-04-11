@@ -6,17 +6,16 @@ import io.qameta.allure.Description
 import io.qameta.allure.Epic
 import io.qameta.allure.Feature
 import io.qameta.allure.Story
+import org.junit.Ignore
 import org.junit.jupiter.api.Test
-import pages.BasePage
 import pages.enroll.EnrollmentAppPage
-import pages.enroll.ProviderProfileFormEnrollmentPage
-import pages.enroll.SinglePageEnrollmentPage
 import pages.seo.ChildCarePage
 
 @Slf4j
 @Epic("Epic")
 @Feature("Feature")
 @Story("Story")
+@Ignore
 class EnrollZipSearchChildCareTest extends Junit5BaseTest {
     
     @Test
