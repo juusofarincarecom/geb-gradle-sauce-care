@@ -8,6 +8,7 @@ import geb.report.ReportState
 import geb.report.Reporter
 import geb.report.ReportingListener
 import geb.report.ScreenshotReporter
+import io.appium.java_client.AppiumDriver
 import io.appium.java_client.android.AndroidDriver
 import io.appium.java_client.ios.IOSDriver
 import io.qameta.allure.Allure
@@ -140,7 +141,7 @@ environments {
             sauceOptions.setCapability("build", "<your build id>")
             sauceOptions.setCapability("name", "<your test name>")
             caps.setCapability("sauce:options", sauceOptions)
-            new AndroidDriver(url, caps)
+            new AppiumDriver(url, caps)
         }
     }
 }

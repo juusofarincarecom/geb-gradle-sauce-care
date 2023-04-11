@@ -29,7 +29,7 @@ ext {
         "chrome_android"
     ]
     gebVersion = '7.0'
-    seleniumVersion = '4.8.3'
+    seleniumVersion = '4.7.0'
     allureVersion = '2.21.0'
     junit5Version = '5.9.2'
 }
