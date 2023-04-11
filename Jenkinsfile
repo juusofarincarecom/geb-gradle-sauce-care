@@ -9,7 +9,7 @@ def generateStage(job) {
     return {
         stage("stage: ${job}") {
             sauce("qacare") {
-                sh "./gradlew clean ${job}Test -DTEST_ENVIRONMENT=${System.getProperty("TEST_ENVIRONMENT", "stg")}"
+                sh "./gradlew ${job}Test -DTEST_ENVIRONMENT=${System.getProperty("TEST_ENVIRONMENT", "stg")}"
                 def testStatus = ""
                 def testResultsPath = "build/test-results/${job}/*.xml"
                 def summary = junit allowEmptyResults: true, testDataPublishers: [[$class: 'SauceOnDemandReportPublisher', jobVisibility: 'public']], testResults: testResultsPath
@@ -49,6 +49,7 @@ pipeline {
         stage('non-parallel stage') {
             steps {
                 echo 'This stage will be executed first.'
+                sh "./gradlew clean"
             }
         }
         stage('Run Stages in Parallel') {

@@ -29,6 +29,6 @@ class UrgencyModule extends BaseModule {
     
     @Step("Wait For Urgency Module to not be displayed")
     def closeButtonNotDisplayed() {
-        waitFor("slow") { urgencyModule.isEmpty() }
+        waitFor("slow") { closeButton.isEmpty() }
     }
 }
