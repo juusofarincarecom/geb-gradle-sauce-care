@@ -27,7 +27,9 @@ def generateStage(job) {
 }
 
 pipeline {
-    triggers { cron "H H/3 * * *" }
+    triggers {
+        cron(env.BRANCH_NAME == 'main' ? "H H/3 * * *" : '')
+    }
     agent { label 'build' }
     parameters {
         choice(name: 'TEST_ENVIRONMENT', choices: ['stg', 'dev', 'prod'], description: 'Select the target environment for your tests')
