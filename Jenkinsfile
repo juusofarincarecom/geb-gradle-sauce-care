@@ -10,7 +10,7 @@ def generateStage(job) {
         stage("stage: ${job}") {
             sauce("qacare") {
                 sh "set +e"
-                sh "./gradlew ${job}Test -DTEST_ENVIRONMENT=${System.getProperty("TEST_ENVIRONMENT", "stg")} --continue"
+                sh "./gradlew ${job}Test -DTEST_ENVIRONMENT=${System.getProperty("TEST_ENVIRONMENT", "stg")} --continue", returnStatus: true
                 def testStatus = ""
                 def testResultsPath = "build/test-results/${job}/*.xml"
                 def summary = junit allowEmptyResults: true, testDataPublishers: [[$class: 'SauceOnDemandReportPublisher', jobVisibility: 'public']], testResults: testResultsPath
