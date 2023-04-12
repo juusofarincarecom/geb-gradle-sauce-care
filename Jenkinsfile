@@ -13,12 +13,11 @@ def generateStage(job) {
                 def testStatus = ""
                 def testResultsPath = "build/test-results/${job}Test/*.xml"
                 def summary = junit allowEmptyResults: true, testDataPublishers: [[$class: 'SauceOnDemandReportPublisher', jobVisibility: 'public']], testResults: testResultsPath
-                saucePublisher testDataPublishers: [[$class: 'SauceOnDemandReportPublisher', jobVisibility: 'public']]
                 testStatus = "\nTotal: ${summary.totalCount}, Passed: ${summary.passCount}, Failures: ${summary.failCount}, Skipped: ${summary.skipCount}"
                 slackSend color: slackMessageColor(),
                           botUser: true,
                           channel: '@juuso.farin',
-                          message: "SEO Visitor Test Result : #${currentBuild.result} <${BUILD_URL}allure|report>, <${BUILD_URL}|job>" +
+                          message: "SEO ${job} Test Result: #${currentBuild.result ?: 'PASSED'} <${BUILD_URL}allure|report>, <${BUILD_URL}|job>" +
                                    testStatus,
                           tokenCredentialId: 'slack-api-bot-user-oauth-token'
                 }
