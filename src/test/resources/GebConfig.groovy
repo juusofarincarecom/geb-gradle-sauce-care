@@ -114,37 +114,35 @@ environments {
     safari_ios {
         driver = {
             isSauceLabs()
-            MutableCapabilities caps = new MutableCapabilities()
-            caps.setCapability("platformName", "iOS")
-            caps.setCapability("browserName", "Safari")
-            caps.setCapability("appium:deviceName", "iPhone Simulator")
-            caps.setCapability("appium:platformVersion", "16.2")
-            caps.setCapability("appium:automationName", "XCUITest")
-            MutableCapabilities sauceOptions = new MutableCapabilities()
-            sauceOptions.setCapability("appiumVersion", "2.0.0-beta56")
-            sauceOptions.setCapability("build", "<your build id>")
-            sauceOptions.setCapability("name", "<your test name>")
-            caps.setCapability("sauce:options", sauceOptions)
-            new IOSDriver(url, caps)
+            MutableCapabilities ios_caps = new MutableCapabilities();
+            ios_caps.setCapability("platformName", "iOS");
+            ios_caps.setCapability("browserName", "Safari");
+            ios_caps.setCapability("appium:deviceName", "iPhone Fast Simulator");
+            ios_caps.setCapability("appium:platformVersion", "previous_major");
+            ios_caps.setCapability("appium:automationName", "XCUITest");
+            MutableCapabilities ios_opts = new MutableCapabilities();
+            ios_opts.setCapability("appiumVersion", "2.0.0-beta56");
+            ios_opts.setCapability("build", System.getenv("JENKINS_BUILD_NUMBER"));
+            ios_caps.setCapability("sauce:options", ios_opts);
+            new IOSDriver(url, ios_caps)
         }
     }
-//    chrome_android {
-//        driver = {
-//            isSauceLabs()
-//            MutableCapabilities caps = new MutableCapabilities();
-//            caps.setCapability("platformName", "Android")
-//            caps.setCapability("browserName", "Chrome")
-//            caps.setCapability("appium:deviceName", "Android GoogleAPI Emulator")
-//            caps.setCapability("appium:platformVersion", "12.0")
-//            caps.setCapability("appium:automationName", "UiAutomator2")
-//            MutableCapabilities sauceOptions = new MutableCapabilities()
-//            sauceOptions.setCapability("appiumVersion", "2.0.0-beta56")
-//            sauceOptions.setCapability("build", "<your build id>")
-//            sauceOptions.setCapability("name", "<your test name>")
-//            caps.setCapability("sauce:options", sauceOptions)
-//            new AndroidDriver(url, caps)
-//        }
-//    }
+    chrome_android {
+        driver = {
+            isSauceLabs()
+            MutableCapabilities andr_caps = new MutableCapabilities();
+            andr_caps.setCapability("platformName", "Android");
+            andr_caps.setCapability("browserName", "Chrome");
+            andr_caps.setCapability("appium:deviceName", "Android GoogleAPI Emulator");
+            andr_caps.setCapability("appium:platformVersion", "12.0");
+            andr_caps.setCapability("appium:automationName", "UiAutomator2");
+            MutableCapabilities andr_opts = new MutableCapabilities();
+            andr_opts.setCapability("appiumVersion", "2.0.0-beta56");
+            andr_opts.setCapability("build", System.getenv("JENKINS_BUILD_NUMBER"));
+            andr_caps.setCapability("sauce:options", andr_opts);
+            new AndroidDriver(url, andr_caps)
+        }
+    }
 }
 
 baseUrl = getCareBaseUrl(System.getProperty("TEST_ENVIRONMENT", "stg"))

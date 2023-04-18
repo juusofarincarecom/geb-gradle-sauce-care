@@ -26,7 +26,7 @@ ext {
         "firefox_mac",
         "chrome_mac",
         "safari_ios",
-        //"chrome_android" Uncomment when appium+selenium is compatible again
+        "chrome_android"
         //https://github.com/appium/java-client/issues/1872#issuecomment-1484017595
     ]
     gebVersion = '7.0'
