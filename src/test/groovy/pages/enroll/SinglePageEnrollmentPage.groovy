@@ -9,6 +9,6 @@ class SinglePageEnrollmentPage extends BasePage {
     static url = "enroll-care-seeker-p1042-q111085935.html"
     
     static content = {
-        form { $("form", id: "singlePageEnrollmentForm") }
+        form(wait: true) { $("form", id: "singlePageEnrollmentForm") }
     }
 }

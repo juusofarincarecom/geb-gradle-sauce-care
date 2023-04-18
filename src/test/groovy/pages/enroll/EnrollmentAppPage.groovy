@@ -9,7 +9,7 @@ class EnrollmentAppPage extends BasePage {
     static url = "app/enrollment"
     
     static content = {
-        app (wait: true) { $("div", class: contains("MuiBox-root"), state: "entered") }
+        app(wait: true) { $("div", class: contains("MuiBox-root"), state: "entered") }
         zipCode(wait: true) { $("#zipCode-label") }
     }
 }

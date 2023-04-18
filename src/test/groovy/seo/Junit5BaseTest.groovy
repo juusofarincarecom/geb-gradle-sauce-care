@@ -1,22 +1,18 @@
 package seo
 
+import geb.Browser
 import geb.Page
 import geb.junit5.GebReportingTest
+import geb.test.GebTestManager
+import geb.test.GebTestManagerBuilder
 import groovy.util.logging.Slf4j
 import io.qameta.allure.Allure
 import io.qameta.allure.Step
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtensionContext
-import org.junit.jupiter.api.extension.ParameterResolver
 import org.openqa.selenium.Capabilities
 import org.openqa.selenium.JavascriptExecutor
 import org.openqa.selenium.remote.RemoteWebDriver
-import pages.BasePage
-import pages.enroll.EnrollmentAppPage
-import pages.enroll.ProviderProfileFormEnrollmentPage
-import pages.enroll.SinglePageEnrollmentPage
 
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
@@ -27,6 +23,16 @@ import static java.nio.charset.StandardCharsets.US_ASCII
 
 @Slf4j
 class Junit5BaseTest extends GebReportingTest {
+    
+    private final static GebTestManager TEST_MANAGER = new GebTestManagerBuilder()
+        .withBrowserCreator { new Browser() }
+        .withReportingEnabled(true)
+        .build()
+    
+    @Override
+    static GebTestManager getTestManager() {
+        TEST_MANAGER
+    }
     
     Boolean isSauceLabs = USER_ENV_VAR?.trim() ?: false
     
@@ -46,12 +52,12 @@ class Junit5BaseTest extends GebReportingTest {
     
     @BeforeAll
     static void init(){
-        log.info("BeforeAll init() method called");
+        log.info("BeforeAll init() method called")
     }
     
     @BeforeEach
     void initEach(){
-        log.info("BeforeEach initEach() method called");
+        log.info("BeforeEach initEach() method called")
         if(isSauceLabs) { setupSauceLabsTestData() }
     }
     
@@ -72,7 +78,7 @@ class Junit5BaseTest extends GebReportingTest {
     }
     
     @Step("Get Sauce Live view url")
-    private String getSauceLink(String sauceJobId) throws NoSuchAlgorithmException, InvalidKeyException {
+    private static String getSauceLink(String sauceJobId) throws NoSuchAlgorithmException, InvalidKeyException {
         SecretKeySpec sks = new SecretKeySpec(KEY.getBytes(US_ASCII), "HmacMD5")
         Mac mac = Mac.getInstance("HmacMD5")
         mac.init(sks)

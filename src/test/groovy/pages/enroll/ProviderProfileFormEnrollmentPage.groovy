@@ -9,6 +9,6 @@ class ProviderProfileFormEnrollmentPage extends BasePage {
     static url = "swf"
     
     static content = {
-        form { $("form", id: "providerProfileForm") }
+        form(wait: true) { $("form", id: "providerProfileForm") }
     }
 }

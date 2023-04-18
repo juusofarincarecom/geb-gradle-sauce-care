@@ -4,11 +4,11 @@
 	See: http://www.gebish.org/manual/current/#configuration
 */
 
+
 import geb.report.ReportState
 import geb.report.Reporter
 import geb.report.ReportingListener
 import geb.report.ScreenshotReporter
-import io.appium.java_client.AppiumDriver
 import io.appium.java_client.android.AndroidDriver
 import io.appium.java_client.ios.IOSDriver
 import io.qameta.allure.Allure
@@ -19,13 +19,12 @@ import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.edge.EdgeOptions
 import org.openqa.selenium.firefox.FirefoxDriver
 import org.openqa.selenium.firefox.FirefoxOptions
-import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.remote.RemoteWebDriver
 import pages.error.*
 
 import java.nio.file.Files
 
-import static org.openqa.selenium.Platform.*
+import static org.openqa.selenium.Platform.WIN11
 
 cacheDriver = true
 cacheDriverPerThread = true
@@ -114,32 +113,32 @@ environments {
     safari_ios {
         driver = {
             isSauceLabs()
-            MutableCapabilities ios_caps = new MutableCapabilities();
-            ios_caps.setCapability("platformName", "iOS");
-            ios_caps.setCapability("browserName", "Safari");
-            ios_caps.setCapability("appium:deviceName", "iPhone Fast Simulator");
-            ios_caps.setCapability("appium:platformVersion", "previous_major");
-            ios_caps.setCapability("appium:automationName", "XCUITest");
-            MutableCapabilities ios_opts = new MutableCapabilities();
-            ios_opts.setCapability("appiumVersion", "2.0.0-beta56");
-            ios_opts.setCapability("build", System.getenv("JENKINS_BUILD_NUMBER"));
-            ios_caps.setCapability("sauce:options", ios_opts);
+            MutableCapabilities ios_caps = new MutableCapabilities()
+            ios_caps.setCapability("platformName", "iOS")
+            ios_caps.setCapability("browserName", "Safari")
+            ios_caps.setCapability("appium:deviceName", "iPhone Fast Simulator")
+            ios_caps.setCapability("appium:platformVersion", "previous_major")
+            ios_caps.setCapability("appium:automationName", "XCUITest")
+            MutableCapabilities ios_opts = new MutableCapabilities()
+            ios_opts.setCapability("appiumVersion", "2.0.0-beta56")
+            ios_opts.setCapability("build", System.getenv("JENKINS_BUILD_NUMBER"))
+            ios_caps.setCapability("sauce:options", ios_opts)
             new IOSDriver(url, ios_caps)
         }
     }
     chrome_android {
         driver = {
             isSauceLabs()
-            MutableCapabilities andr_caps = new MutableCapabilities();
-            andr_caps.setCapability("platformName", "Android");
-            andr_caps.setCapability("browserName", "Chrome");
-            andr_caps.setCapability("appium:deviceName", "Android GoogleAPI Emulator");
-            andr_caps.setCapability("appium:platformVersion", "12.0");
-            andr_caps.setCapability("appium:automationName", "UiAutomator2");
-            MutableCapabilities andr_opts = new MutableCapabilities();
-            andr_opts.setCapability("appiumVersion", "2.0.0-beta56");
-            andr_opts.setCapability("build", System.getenv("JENKINS_BUILD_NUMBER"));
-            andr_caps.setCapability("sauce:options", andr_opts);
+            MutableCapabilities andr_caps = new MutableCapabilities()
+            andr_caps.setCapability("platformName", "Android")
+            andr_caps.setCapability("browserName", "Chrome")
+            andr_caps.setCapability("appium:deviceName", "Android GoogleAPI Emulator")
+            andr_caps.setCapability("appium:platformVersion", "12.0")
+            andr_caps.setCapability("appium:automationName", "UiAutomator2")
+            MutableCapabilities andr_opts = new MutableCapabilities()
+            andr_opts.setCapability("appiumVersion", "2.0.0-beta56")
+            andr_opts.setCapability("build", System.getenv("JENKINS_BUILD_NUMBER"))
+            andr_caps.setCapability("sauce:options", andr_opts)
             new AndroidDriver(url, andr_caps)
         }
     }
