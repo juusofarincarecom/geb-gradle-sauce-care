@@ -12,7 +12,7 @@ def generateStage(job) {
                 sh "./gradlew ${job}Test -DTEST_ENVIRONMENT=${System.getProperty("TEST_ENVIRONMENT", "stg")} --continue || true"
                 def testStatus = ""
                 def testResultsPath = "build/test-results/${job}Test/*.xml"
-                def summary = junit allowEmptyResults: true, testDataPublishers: [[$class: 'SauceOnDemandReportPublisher', jobVisibility: 'public']], testResults: testResultsPath
+                def summary = junit allowEmptyResults: true, skipPublishingChecks: true, testResults: testResultsPath, testDataPublishers: [[$class: 'SauceOnDemandReportPublisher', jobVisibility: 'public']]
                 testStatus = "\nTotal: ${summary.totalCount}, Passed: ${summary.passCount}, Failures: ${summary.failCount}, Skipped: ${summary.skipCount}"
                 slackSend color: slackMessageColor(),
                           botUser: true,
