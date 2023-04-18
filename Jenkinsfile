@@ -13,6 +13,13 @@ def generateStage(job) {
                 def testStatus = ""
                 def testResultsPath = "build/test-results/${job}Test/*.xml"
                 def summary = junit allowEmptyResults: true, skipPublishingChecks: true, testResults: testResultsPath, testDataPublishers: [[$class: 'SauceOnDemandReportPublisher', jobVisibility: 'public']]
+                allure jdk: '',
+                       properties: [[key: 'allure.link.issue.pattern',
+                                     value: 'https://carecom.atlassian.net/browse/{}'],
+                                    [key: 'allure.link.tms.pattern',
+                                     value: 'https://care.testrail.io/index.php?/cases/view/{}']],
+                       report: 'build/reports/allure-report',
+                       results: [[path: 'build/reports/allure-results']]
                 testStatus = "\nTotal: ${summary.totalCount}, Passed: ${summary.passCount}, Failures: ${summary.failCount}, Skipped: ${summary.skipCount}"
                 slackSend color: slackMessageColor(),
                           botUser: true,
