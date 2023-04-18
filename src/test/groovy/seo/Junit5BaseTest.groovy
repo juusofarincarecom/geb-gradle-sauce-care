@@ -24,7 +24,7 @@ import static java.nio.charset.StandardCharsets.US_ASCII
 @Slf4j
 class Junit5BaseTest extends GebReportingTest {
     
-    private final static GebTestManager TEST_MANAGER = new GebTestManagerBuilder()
+    private final static TEST_MANAGER = new GebTestManagerBuilder()
         .withBrowserCreator { new Browser() }
         .withReportingEnabled(true)
         .build()

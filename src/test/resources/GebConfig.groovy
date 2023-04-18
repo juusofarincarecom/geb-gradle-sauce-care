@@ -29,8 +29,8 @@ import static org.openqa.selenium.Platform.WIN11
 cacheDriver = true
 cacheDriverPerThread = true
 atCheckWaiting = true
-autoClearCookies = true
-autoClearWebStorage = true
+autoClearCookies = false
+autoClearWebStorage = false
 baseNavigatorWaiting = true
 reportOnTestFailureOnly = true
 unexpectedPages = [UpstreamRequestTimeoutPage, PageNotFoundPage, AkamaiReferencePage, ForbiddenErrorPage, NotAllowedErrorPage]
