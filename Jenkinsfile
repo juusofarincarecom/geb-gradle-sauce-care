@@ -67,17 +67,6 @@ pipeline {
                 }
             }
         }
-        stage('Allure Report') {
-            steps {
-                allure jdk: '',
-                       properties: [[key: 'allure.link.issue.pattern',
-                                     value: 'https://carecom.atlassian.net/browse/{}'],
-                                    [key: 'allure.link.tms.pattern',
-                                     value: 'https://care.testrail.io/index.php?/cases/view/{}']],
-                       report: 'build/reports/allure-report',
-                       results: [[path: 'build/reports/allure-results']]
-            }
-        }
     }
 }
 
