@@ -20,7 +20,6 @@ class EnrollZipSearchTutoringTest extends Junit5BaseTest {
     
     @Test
     @Description("Go To Tutoring Page and Start Enrollment with Zip Code Search Submit")
-    @Disabled
     void EnrollZipSearchTutoring() {
         page = to(TutoringPage)
         page.urgencyModule.waitForUrgencyModule()

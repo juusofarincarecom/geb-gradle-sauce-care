@@ -11,15 +11,8 @@ def generateStage(job) {
             sauce("qacare") {
                 sh "./gradlew ${job}Test -DTEST_ENVIRONMENT=${System.getProperty("TEST_ENVIRONMENT", "stg")} --continue || true"
                 def testStatus = ""
-                def testResultsPath = "build/test-results/${job}Test/*.xml"
+                def testResultsPath = "build/test-results/${job}Test/*.xml" as Object
                 def summary = junit allowEmptyResults: true, skipPublishingChecks: true, testResults: testResultsPath, testDataPublishers: [[$class: 'SauceOnDemandReportPublisher', jobVisibility: 'public']]
-                allure jdk: '',
-                       properties: [[key: 'allure.link.issue.pattern',
-                                     value: 'https://carecom.atlassian.net/browse/{}'],
-                                    [key: 'allure.link.tms.pattern',
-                                     value: 'https://care.testrail.io/index.php?/cases/view/{}']],
-                       report: 'build/reports/allure-report',
-                       results: [[path: 'build/reports/allure-results']]
                 testStatus = "\nTotal: ${summary.totalCount}, Passed: ${summary.passCount}, Failures: ${summary.failCount}, Skipped: ${summary.skipCount}"
                 slackSend color: slackMessageColor(),
                           botUser: true,

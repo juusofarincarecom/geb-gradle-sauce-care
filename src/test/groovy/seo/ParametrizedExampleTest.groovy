@@ -25,17 +25,16 @@ class ParametrizedExampleTest extends Junit5BaseTest {
     
         @ParameterizedTest(name = "Verify title of {0} page")
         @ValueSource(classes = [TutoringPage, ChildCarePage])
-        @Disabled
         void ParametrizedExample(Class<? extends Page> pageClass) {
             browser.clearCookies()
             Page inputPage = pageClass.newInstance()
             page = to(inputPage as Class<BasePage>)
-            page.urgencyModule.waitForUrgencyModule();
-            page.urgencyModule.clickCloseButton();
-            page.urgencyModule.closeButtonNotDisplayed();
-            page.zipCode.addZipCode();
-            page.zipCode.submitZipCode();
-            at(EnrollmentAppPage.class);
+            page.urgencyModule.waitForUrgencyModule()
+            page.urgencyModule.clickCloseButton()
+            page.urgencyModule.closeButtonNotDisplayed()
+            page.zipCode.addZipCode()
+            page.zipCode.submitZipCode()
+            at(EnrollmentAppPage.class)
         }
         
 }

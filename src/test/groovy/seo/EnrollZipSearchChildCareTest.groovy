@@ -19,7 +19,6 @@ import pages.seo.ChildCarePage
 class EnrollZipSearchChildCareTest extends Junit5BaseTest {
     
     @Test
-    @Disabled
     @Description("Go To ChildCare Page and Start Enrollment with Zip Code Search Submit")
     void EnrollZipSearchChildCare() {
         page = to(ChildCarePage)
